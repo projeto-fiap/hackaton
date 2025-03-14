@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: project
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=public} # 1
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    drop-first: true # 2
+    enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # 3
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true # 4
+        show_sql: true
+  main:
+    allow-bean-definition-overriding: true
+    logging:
+      level:
+        org.springframework.security: DEBUG
+        org.springframework.web: DEBUG
+        tech.fiap.hackaton: DEBUG
