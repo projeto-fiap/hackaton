@@ -29,7 +29,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Remove o prefixo "Bearer "
+            token = token.substring(7);
             try {
                 Claims claims = Jwts.parserBuilder()
                         .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
@@ -41,7 +41,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 List<String> roles = claims.get("roles", List.class);
 
                 if (email != null) {
-                    // Cria um objeto de autenticação e define no contexto de segurança
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                             email,
                             null,
@@ -50,12 +49,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (Exception e) {
-                // Em caso de erro, limpa o contexto de segurança
+
                 SecurityContextHolder.clearContext();
             }
         }
 
-        // Continua a cadeia de filtros
+
         filterChain.doFilter(request, response);
     }
 }

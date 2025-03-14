@@ -31,7 +31,6 @@ public class PersonController {
 
     @GetMapping("/login")
     public String login(@RequestHeader("Authorization") String authorizationHeader) {
-        // Extrai as credenciais do header Authorization
         String[] parts = authorizationHeader.split(" ");
         if (parts.length == 2 && parts[0].equalsIgnoreCase("Basic")) {
             String decoded = new String(java.util.Base64.getDecoder().decode(parts[1]));

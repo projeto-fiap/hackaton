@@ -26,27 +26,27 @@ public class LoginUseCaseImpl implements LoginUseCase {
 
     @Override
     public String login(String email, String senha) {
-        // Busca a pessoa pelo email
+
         Optional<Person> optionalPerson = personRepository.findByEmail(email);
 
         if (optionalPerson.isPresent()) {
             Person person = optionalPerson.get();
 
-            // Verifica se a senha corresponde
+
             if (passwordEncoder.matches(senha, person.getSenha())) {
-                // Gera o token JWT
+
                 String token = Jwts.builder()
                         .setSubject(person.getEmail())
-                        .claim("roles", "USER") // Ajuste para as roles conforme necessário
+                        .claim("roles", "USER")
                         .setIssuedAt(new Date())
-                        .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 dia de validade
+                        .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                         .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
                         .compact();
 
-                return token; // Retorna o token gerado
+                return token;
             }
         }
 
-        throw new RuntimeException("Credenciais inválidas"); // Retorna um erro caso as credenciais sejam inválidas
+        throw new RuntimeException("Credenciais inválidas");
     }
 }

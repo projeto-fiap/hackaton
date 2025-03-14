@@ -24,11 +24,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/persons/register", "/persons/login").permitAll() // Permite acesso sem autenticação para login e cadastro
-                        .anyRequest().authenticated()  // Requer autenticação para todas as outras rotas
+                        .requestMatchers("/persons/register", "/persons/login").permitAll()
+                        .anyRequest().authenticated()
                 );
 
-        // Adiciona o filtro JWT antes do filtro padrão de autenticação
+
         http.addFilterBefore(jwtRequestFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
