@@ -15,6 +15,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,22 +39,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         .getBody();
 
                 String email = claims.getSubject();
-                List<String> roles = claims.get("roles", List.class);
+                String rolesClaim = claims.get("roles", String.class);  // Recuperando como String
+                List<String> roles = Arrays.asList(rolesClaim.split(","));  // Convertendo para lista de roles
 
                 if (email != null) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                             email,
                             null,
-                            roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                            roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).collect(Collectors.toList())
                     );
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (Exception e) {
-
                 SecurityContextHolder.clearContext();
             }
         }
-
 
         filterChain.doFilter(request, response);
     }

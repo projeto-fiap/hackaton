@@ -5,7 +5,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tech.fiap.hackaton.api.usecase.LoginUseCase;
+import tech.fiap.hackaton.api.usecase.Login;
 import tech.fiap.hackaton.internal.entity.Person;
 import tech.fiap.hackaton.internal.repository.PersonRepository;
 
@@ -13,13 +13,13 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class LoginUseCaseImpl implements LoginUseCase {
+public class LoginImpl implements Login {
 
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
     private final String SECRET_KEY = "suaChaveSecretaMuitoSeguraEComplexa1234567890";
 
-    public LoginUseCaseImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+    public LoginImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -39,7 +39,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
                         .setSubject(person.getEmail())
                         .claim("roles", "USER")
                         .setIssuedAt(new Date())
-                        .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                        .setExpiration(new Date(System.currentTimeMillis() + 1200000))
                         .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
                         .compact();
 
