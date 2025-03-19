@@ -5,24 +5,62 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <!-- Cria a tabela Person -->
-    <changeSet id="1" author="yourname">
+    <!-- Criação da tabela 'person' -->
+    <changeSet id="1" author="fiap">
         <createTable tableName="person">
-            <column name="id" type="bigint" autoIncrement="true">
+            <column name="id" type="BIGSERIAL">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="nome" type="varchar(255)">
-                <constraints nullable="false"/> <!-- 1 -->
+            <column name="nome" type="VARCHAR(100)">
+                <constraints nullable="false"/>
             </column>
-            <column name="cpf" type="varchar(14)">
-                <constraints nullable="false" unique="true"/> <!-- 2 -->
+            <column name="cpf" type="VARCHAR(11)">
+                <constraints nullable="false" unique="true"/>
             </column>
-            <column name="senha" type="varchar(255)">
-                <constraints nullable="false"/> <!-- 3 -->
+            <column name="senha" type="VARCHAR(255)">
+                <constraints nullable="false"/>
             </column>
-            <column name="email" type="varchar(255)">
-                <constraints nullable="false" unique="true"/> <!-- 4 -->
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
     </changeSet>
+
+    <!-- Criação da tabela 'video' -->
+    <changeSet id="2" author="fiap">
+        <createTable tableName="video">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="nome" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="VARCHAR(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_criacao" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data_atualizacao" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="person_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Criação da chave estrangeira entre as tabelas 'video' e 'person' -->
+    <changeSet id="3" author="fiap">
+        <addForeignKeyConstraint
+                constraintName="fk_video_person"
+                baseTableName="video"
+                baseColumnNames="person_id"
+                referencedTableName="person"
+                referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>
