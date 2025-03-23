@@ -1,4 +1,25 @@
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    # Configurações globais para consumidores
+    consumer:
+      auto-offset-reset: earliest
+
+    # Configurações específicas para o consumer de processamento de vídeos
+    video-consumer:
+      group-id: video-group
+      topic: video-topic
+
+    # Configurações específicas para o consumer de notificações por e-mail
+    email-consumer:
+      group-id: email-notification-group
+      topic: video-status-topic
+
+    # Configurações do producer (se necessário)
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   servlet:
     multipart:
       max-file-size: 100MB
@@ -29,3 +50,4 @@ spring:
         org.springframework.security: DEBUG
         org.springframework.web: DEBUG
         tech.fiap.hackaton: DEBUG
+

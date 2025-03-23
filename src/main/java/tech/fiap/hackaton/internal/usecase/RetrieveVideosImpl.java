@@ -20,10 +20,8 @@ public class RetrieveVideosImpl implements RetrieveVideos {
 
     @Override
     public List<VideoDTO> getVideosByPerson(Long personId) {
-        // Busca os vídeos associados ao personId
         List<Video> videos = videoRepository.findByPersonId(personId);
 
-        // Converte diretamente os vídeos para VideoDTO
         return videos.stream().map(video -> new VideoDTO(
                 video.getId(),
                 video.getNome(),
