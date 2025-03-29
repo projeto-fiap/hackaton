@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/person/register", "/person/login").permitAll()
-                        .requestMatchers("/person/**").hasRole("USER")
+                        .requestMatchers("/video/**","/person/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)  // Adiciona o filtro JWT antes do filtro de autenticação padrão
