@@ -2,25 +2,32 @@ package tech.fiap.hackaton.api.controller;
 
 
 import tech.fiap.hackaton.api.model.PersonResponse;
-import tech.fiap.hackaton.api.usecase.CreatePersonUseCase;
-import tech.fiap.hackaton.api.usecase.LoginUseCase;
+import tech.fiap.hackaton.api.usecase.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.fiap.hackaton.internal.dto.PersonDTO;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
-@RequestMapping("/persons")
+@RequestMapping("/person")
 public class PersonController {
 
-    private final CreatePersonUseCase createPersonUseCase;
-    private final LoginUseCase loginUseCase;
+    private final CreatePerson createPersonUseCase;
+    private final Login loginUseCase;
+    private final RetriveAllPerson retriveAllPersonUseCase;
+    private final DeletePerson deletePersonUseCase;
+    private final UpdatePerson updatePersonUseCase;
+    private final RetriveByIdPerson retriveByIdPersonUseCase;
 
-    public PersonController(CreatePersonUseCase createPersonUseCase, LoginUseCase loginUseCase) {
+    public PersonController(CreatePerson createPersonUseCase, Login loginUseCase, RetriveAllPerson retriveAllPersonUseCase, DeletePerson deletePersonUseCase, UpdatePerson updatePersonUseCase, RetriveByIdPerson retriveByIdPersonUseCase) {
         this.createPersonUseCase = createPersonUseCase;
         this.loginUseCase = loginUseCase;
+        this.retriveAllPersonUseCase = retriveAllPersonUseCase;
+        this.deletePersonUseCase = deletePersonUseCase;
+        this.updatePersonUseCase = updatePersonUseCase;
+        this.retriveByIdPersonUseCase = retriveByIdPersonUseCase;
     }
 
     @PostMapping("/register")
@@ -31,7 +38,6 @@ public class PersonController {
 
     @GetMapping("/login")
     public String login(@RequestHeader("Authorization") String authorizationHeader) {
-        // Extrai as credenciais do header Authorization
         String[] parts = authorizationHeader.split(" ");
         if (parts.length == 2 && parts[0].equalsIgnoreCase("Basic")) {
             String decoded = new String(java.util.Base64.getDecoder().decode(parts[1]));
@@ -43,5 +49,25 @@ public class PersonController {
             }
         }
         throw new RuntimeException("Credenciais inválidas");
+    }
+
+    @GetMapping
+    public List<PersonResponse> getAllPersons() {
+        return retriveAllPersonUseCase.getAllPersons();
+    }
+
+    @GetMapping("/{id}")
+    public PersonResponse getPersonById(@PathVariable Long id) {
+        return retriveByIdPersonUseCase.getPersonById(id);
+    }
+
+    @PutMapping("/{id}")
+    public PersonResponse updatePerson(@PathVariable Long id, @RequestBody PersonDTO personDTO) {
+        return updatePersonUseCase.updatePerson(id, personDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePerson(@PathVariable Long id) {
+        deletePersonUseCase.deletePerson(id);
     }
 }

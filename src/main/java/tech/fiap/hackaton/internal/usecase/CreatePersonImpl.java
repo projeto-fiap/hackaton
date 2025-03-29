@@ -4,18 +4,18 @@ package tech.fiap.hackaton.internal.usecase;
 import tech.fiap.hackaton.api.model.PersonResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tech.fiap.hackaton.api.usecase.CreatePersonUseCase;
+import tech.fiap.hackaton.api.usecase.CreatePerson;
 import tech.fiap.hackaton.internal.dto.PersonDTO;
 import tech.fiap.hackaton.internal.entity.Person;
 import tech.fiap.hackaton.internal.repository.PersonRepository;
 
 @Service
-public class CreatePersonUseCaseImpl implements CreatePersonUseCase {
+public class CreatePersonImpl implements CreatePerson {
 
     private final PersonRepository personRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public CreatePersonUseCaseImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+    public CreatePersonImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
     }

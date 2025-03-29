@@ -2,6 +2,6 @@ package tech.fiap.hackaton.api.usecase;
 
 
 
-public interface LoginUseCase {
+public interface Login {
     String login(String email, String password);
 }
