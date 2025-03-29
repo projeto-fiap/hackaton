@@ -25,41 +25,42 @@ public class CreateVideoImpl implements CreateVideo {
         this.videoRepository = videoRepository;
         this.personRepository = personRepository;
     }
+
     @Transactional
     @Override
     public List<VideoDTO> uploadVideos(List<MultipartFile> files, Long personId) {
-
         Person person = personRepository.findById(personId)
                 .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
 
-
-        List<Video> videos = files.stream().map(file -> {
-            Video video = new Video();
-            video.setNome(file.getOriginalFilename());
-            video.setUrl(file.getOriginalFilename());
-            video.setStatus(VideoStatus.RECEBIDO);
-            video.setDataCriacao(LocalDateTime.now());
-            video.setDataAtualizacao(LocalDateTime.now());
-            video.setPerson(person);
-
-
-            return videoRepository.save(video);
-        }).collect(Collectors.toList());
-
+        List<Video> videos = files.stream()
+                .map(file -> createVideo(file, person))
+                .collect(Collectors.toList());
 
         person.getVideos().addAll(videos);
-
-
         personRepository.save(person);
 
+        return videos.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
 
-        return videos.stream().map(video -> new VideoDTO(
+    private Video createVideo(MultipartFile file, Person person) {
+        Video video = new Video();
+        video.setNome(file.getOriginalFilename());
+        video.setUrl(file.getOriginalFilename());
+        video.setStatus(VideoStatus.RECEBIDO);
+        video.setDataCriacao(LocalDateTime.now());
+        video.setDataAtualizacao(LocalDateTime.now());
+        video.setPerson(person);
+        return videoRepository.save(video);
+    }
+
+    private VideoDTO convertToDTO(Video video) {
+        return new VideoDTO(
                 video.getId(),
                 video.getNome(),
                 video.getUrl(),
                 video.getStatus(),
                 video.getDataCriacao(),
                 video.getDataAtualizacao()
-        )).collect(Collectors.toList());
+        );
     }
 }
