@@ -13,6 +13,7 @@ import tech.fiap.hackaton.internal.repository.VideoRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +51,9 @@ public class CreateVideoImpl implements CreateVideo {
         video.setDataCriacao(LocalDateTime.now());
         video.setDataAtualizacao(LocalDateTime.now());
         video.setPerson(person);
-        return videoRepository.save(video);
+        Video videoSalvo =  videoRepository.save(video);
+        videoSalvo.setHashNome(UUID.randomUUID().toString() + "-" + videoSalvo.getId());
+        return videoRepository.save(videoSalvo);
     }
 
     private VideoDTO convertToDTO(Video video) {

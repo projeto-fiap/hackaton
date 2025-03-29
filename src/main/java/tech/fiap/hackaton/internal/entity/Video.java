@@ -13,6 +13,7 @@ public class Video {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
+    private String hashNome;
     private String url;
     @Enumerated(EnumType.STRING)
     private VideoStatus status;
