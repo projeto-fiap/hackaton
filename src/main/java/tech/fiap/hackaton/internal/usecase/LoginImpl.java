@@ -15,38 +15,36 @@ import java.util.Optional;
 @Service
 public class LoginImpl implements Login {
 
-    private final PersonRepository personRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final String SECRET_KEY = "suaChaveSecretaMuitoSeguraEComplexa1234567890";
+	private final PersonRepository personRepository;
 
-    public LoginImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
-        this.personRepository = personRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+	private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public String login(String email, String senha) {
+	private final String SECRET_KEY = "suaChaveSecretaMuitoSeguraEComplexa1234567890";
 
-        Optional<Person> optionalPerson = personRepository.findByEmail(email);
+	public LoginImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+		this.personRepository = personRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
-        if (optionalPerson.isPresent()) {
-            Person person = optionalPerson.get();
+	@Override
+	public String login(String email, String senha) {
 
+		Optional<Person> optionalPerson = personRepository.findByEmail(email);
 
-            if (passwordEncoder.matches(senha, person.getSenha())) {
+		if (optionalPerson.isPresent()) {
+			Person person = optionalPerson.get();
 
-                String token = Jwts.builder()
-                        .setSubject(person.getEmail())
-                        .claim("roles", "USER")
-                        .setIssuedAt(new Date())
-                        .setExpiration(new Date(System.currentTimeMillis() + 1200000))
-                        .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
-                        .compact();
+			if (passwordEncoder.matches(senha, person.getSenha())) {
 
-                return token;
-            }
-        }
+				String token = Jwts.builder().setSubject(person.getEmail()).claim("roles", "USER")
+						.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 1200000))
+						.signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256).compact();
 
-        throw new RuntimeException("Credenciais inválidas");
-    }
+				return token;
+			}
+		}
+
+		throw new RuntimeException("Credenciais inválidas");
+	}
+
 }

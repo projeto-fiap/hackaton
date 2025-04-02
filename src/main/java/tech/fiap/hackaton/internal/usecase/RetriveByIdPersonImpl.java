@@ -8,17 +8,18 @@ import tech.fiap.hackaton.internal.repository.PersonRepository;
 
 @Service
 public class RetriveByIdPersonImpl implements RetriveByIdPerson {
-    private final PersonRepository personRepository;
 
-    public RetriveByIdPersonImpl (PersonRepository personRepository) {
-        this.personRepository = personRepository;
-    }
+	private final PersonRepository personRepository;
 
-    @Override
-    public PersonResponse getPersonById(Long id) {
-        Person person = personRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+	public RetriveByIdPersonImpl(PersonRepository personRepository) {
+		this.personRepository = personRepository;
+	}
 
-        return new PersonResponse(person.getId(), person.getNome(), person.getCpf(), person.getEmail());
-    }
+	@Override
+	public PersonResponse getPersonById(Long id) {
+		Person person = personRepository.findById(id).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+
+		return new PersonResponse(person.getId(), person.getNome(), person.getCpf(), person.getEmail());
+	}
+
 }

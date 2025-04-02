@@ -1,53 +1,52 @@
 spring:
   kafka:
     bootstrap-servers: localhost:9092
-
-    # Configurações globais para consumidores
-    consumer:
-      auto-offset-reset: earliest
-
-    # Configurações específicas para o consumer de processamento de vídeos
-    video-consumer:
-      group-id: video-group
-      topic: video-topic
-
-    # Configurações específicas para o consumer de notificações por e-mail
-    email-consumer:
-      group-id: email-notification-group
-      topic: video-status-topic
-
-    # Configurações do producer (se necessário)
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: tech.fiap.hackaton.internal.infra.VideoProducerSerializer
+      batch-size: 52428800
+      buffer-memory: 52428800
+      acks: all
+      max-request-size: 52428800  # 50MB
+      max-partition-fetch-bytes: 52428800  # 50MB
+  consumer:
+    group-id: video-service
+    auto-offset-reset: earliest
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: tech.fiap.hackaton.internal.infra.VideoProducerDeserializer
+
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 50MB
+      max-request-size: 50MB
+
   application:
     name: project
+
   datasource:
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=public} # 1
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=public}
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
-    drop-first: true # 2
+    drop-first: true
     enabled: true
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update # 3
+      ddl-auto: update
     properties:
       hibernate:
-        globally_quoted_identifiers: true # 4
+        globally_quoted_identifiers: true
         show_sql: true
+
   main:
     allow-bean-definition-overriding: true
-    logging:
-      level:
-        org.springframework.security: DEBUG
-        org.springframework.web: DEBUG
-        tech.fiap.hackaton: DEBUG
-
+  logging:
+    level:
+      org.springframework.security: DEBUG
+      org.springframework.web: DEBUG
+      tech.fiap.hackaton: DEBUG

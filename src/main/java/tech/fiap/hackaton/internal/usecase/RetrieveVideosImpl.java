@@ -12,23 +12,18 @@ import java.util.stream.Collectors;
 @Service
 public class RetrieveVideosImpl implements RetrieveVideos {
 
-    private final VideoRepository videoRepository;
+	private final VideoRepository videoRepository;
 
-    public RetrieveVideosImpl(VideoRepository videoRepository) {
-        this.videoRepository = videoRepository;
-    }
+	public RetrieveVideosImpl(VideoRepository videoRepository) {
+		this.videoRepository = videoRepository;
+	}
 
-    @Override
-    public List<VideoDTO> getVideosByPerson(Long personId) {
-        List<Video> videos = videoRepository.findByPersonId(personId);
+	@Override
+	public List<VideoDTO> getVideosByPerson(Long personId) {
+		List<Video> videos = videoRepository.findByPersonId(personId);
 
-        return videos.stream().map(video -> new VideoDTO(
-                video.getId(),
-                video.getNome(),
-                video.getUrl(),
-                video.getStatus(),
-                video.getDataCriacao(),
-                video.getDataAtualizacao()
-        )).collect(Collectors.toList());
-    }
+		return videos.stream().map(video -> new VideoDTO(video.getId(), video.getNome(), video.getUrl(),
+				video.getStatus(), video.getDataCriacao(), video.getDataAtualizacao())).collect(Collectors.toList());
+	}
+
 }

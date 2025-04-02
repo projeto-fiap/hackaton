@@ -5,5 +5,7 @@ import tech.fiap.hackaton.api.model.PersonResponse;
 import java.util.List;
 
 public interface RetriveAllPerson {
-    List<PersonResponse> getAllPersons();
+
+	List<PersonResponse> getAllPersons();
+
 }

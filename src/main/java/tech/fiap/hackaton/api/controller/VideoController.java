@@ -17,41 +17,42 @@ import java.util.List;
 @RequestMapping("/video")
 public class VideoController {
 
-    private final CreateVideo createVideo;
-    private final RetrieveVideos retrieveVideos;
-    private final RetrieveVideoStatus retrieveVideoStatus;
-    private final GetUserByVideoHash getUserByVideoHash;
+	private final CreateVideo createVideo;
 
-    public VideoController(CreateVideo createVideo, RetrieveVideos retrieveVideos, RetrieveVideoStatus retrieveVideoStatus, GetUserByVideoHash getUserByVideoHash) {
-        this.createVideo = createVideo;
-        this.retrieveVideos = retrieveVideos;
-        this.retrieveVideoStatus = retrieveVideoStatus;
-        this.getUserByVideoHash = getUserByVideoHash;
-    }
+	private final RetrieveVideos retrieveVideos;
 
-    @PostMapping("/upload/{personId}")
-    public List<VideoDTO> uploadVideos(@RequestParam("files") List<MultipartFile> files,
-                                       @PathVariable Long personId) {
-        return createVideo.uploadVideos(files, personId);
-    }
+	private final RetrieveVideoStatus retrieveVideoStatus;
 
-    @GetMapping("/{personId}")
-    public ResponseEntity<List<VideoDTO>> getVideosByPerson(@PathVariable Long personId) {
-        List<VideoDTO> videos = retrieveVideos.getVideosByPerson(personId);
-        return ResponseEntity.ok(videos);
-    }
+	private final GetUserByVideoHash getUserByVideoHash;
 
-    @GetMapping("/status/{videoId}")
-    public ResponseEntity<VideoStatusDTO> getVideoStatus(@PathVariable Long videoId) {
-        VideoStatusDTO status = retrieveVideoStatus.getStatusByVideoId(videoId);
-        return ResponseEntity.ok(status);
-    }
+	public VideoController(CreateVideo createVideo, RetrieveVideos retrieveVideos,
+			RetrieveVideoStatus retrieveVideoStatus, GetUserByVideoHash getUserByVideoHash) {
+		this.createVideo = createVideo;
+		this.retrieveVideos = retrieveVideos;
+		this.retrieveVideoStatus = retrieveVideoStatus;
+		this.getUserByVideoHash = getUserByVideoHash;
+	}
 
-    @GetMapping("/hash/{hashNome}")
-    public PersonWithVideoDTO getPersonWithVideoHash(@PathVariable String hashNome) {
-        return getUserByVideoHash.findUserByVideoHash(hashNome);
-    }
+	@PostMapping("/upload/{personId}")
+	public List<VideoDTO> uploadVideos(@RequestParam("files") List<MultipartFile> files, @PathVariable Long personId) {
+		return createVideo.uploadVideos(files, personId);
+	}
+
+	@GetMapping("/{personId}")
+	public ResponseEntity<List<VideoDTO>> getVideosByPerson(@PathVariable Long personId) {
+		List<VideoDTO> videos = retrieveVideos.getVideosByPerson(personId);
+		return ResponseEntity.ok(videos);
+	}
+
+	@GetMapping("/status/{videoId}")
+	public ResponseEntity<VideoStatusDTO> getVideoStatus(@PathVariable Long videoId) {
+		VideoStatusDTO status = retrieveVideoStatus.getStatusByVideoId(videoId);
+		return ResponseEntity.ok(status);
+	}
+
+	@GetMapping("/hash/{hashNome}")
+	public PersonWithVideoDTO getPersonWithVideoHash(@PathVariable String hashNome) {
+		return getUserByVideoHash.findUserByVideoHash(hashNome);
+	}
 
 }
-
-
