@@ -2,6 +2,7 @@ package tech.fiap.hackaton.internal.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.UpdateTimestamp;
 import tech.fiap.hackaton.internal.entity.enums.VideoStatus;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class Video {
 	private VideoStatus status;
 
 	private LocalDateTime dataCriacao;
-
+	@UpdateTimestamp
 	private LocalDateTime dataAtualizacao;
 
 	@ManyToOne

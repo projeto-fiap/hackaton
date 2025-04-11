@@ -1,39 +1,34 @@
 package tech.fiap.hackaton.internal.infra;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import tech.fiap.hackaton.internal.dto.VideoProducerDTO;
-import java.io.IOException;
-import java.io.ByteArrayInputStream;
-import java.util.zip.GZIPInputStream;
-import org.apache.commons.io.IOUtils;
+import tech.fiap.hackaton.api.usecase.UpdateVideo;
+import tech.fiap.hackaton.internal.dto.VideoStatusKafka;
 
 @Service
 public class VideoConsumer {
 
-    @Autowired
-    private ArquivoService arquivoService;
+    private final UpdateVideo updateVideo;
+    private final ObjectMapper objectMapper;
 
-    @KafkaListener(topics = "v1.video-upload-content", groupId = "video-service")
-    public void consumeVideo(VideoProducerDTO videoDTO) {
-        System.out.println("Recebendo vídeo: " + videoDTO.getFileName());
-        System.out.println(" Tipo: " + videoDTO.getContentType());
+    public VideoConsumer(UpdateVideo updateVideo, ObjectMapper objectMapper) {
+        this.updateVideo = updateVideo;
+        this.objectMapper = objectMapper;
+    }
 
+    @KafkaListener(topics = "v1.video-status", groupId = "video-service")
+    public void consumeVideoStatus(String message) {
         try {
-            byte[] decompressedData = decompress(videoDTO.getData());
-            arquivoService.salvarVideo(decompressedData, videoDTO.getFileName(), videoDTO.getContentType());
-            System.out.println("Vídeo salvo com sucesso!");
-        } catch (IOException e) {
-            System.err.println(" Erro ao salvar o vídeo: " + e.getMessage());
+
+            VideoStatusKafka videoStatusKafka = objectMapper.readValue(message, VideoStatusKafka.class);
+
+
+            updateVideo.updateVideo(videoStatusKafka);
+
+            System.out.println("Vídeo atualizado com sucesso: " + videoStatusKafka.getVideoId());
+        } catch (Exception e) {
+            System.err.println("Erro ao processar a mensagem do Kafka: " + e.getMessage());
         }
     }
-
-    private byte[] decompress(byte[] compressedData) throws IOException {
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(compressedData);
-             GZIPInputStream gis = new GZIPInputStream(bis)) {
-            return IOUtils.toByteArray(gis);
-        }
-    }
-
 }
