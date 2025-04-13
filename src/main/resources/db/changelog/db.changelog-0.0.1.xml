@@ -50,6 +50,9 @@
             <column name="person_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="hash_nome" type="VARCHAR(255)">
+                <constraints nullable="true" unique="true"/>
+            </column>
         </createTable>
     </changeSet>
 

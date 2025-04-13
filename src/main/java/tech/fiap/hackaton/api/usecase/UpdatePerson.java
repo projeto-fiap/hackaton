@@ -4,5 +4,7 @@ import tech.fiap.hackaton.api.model.PersonResponse;
 import tech.fiap.hackaton.internal.dto.PersonDTO;
 
 public interface UpdatePerson {
-    PersonResponse updatePerson(Long id, PersonDTO personDTO);
+
+	PersonResponse updatePerson(Long id, PersonDTO personDTO);
+
 }

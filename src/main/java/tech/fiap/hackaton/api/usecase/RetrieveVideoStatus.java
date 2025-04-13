@@ -4,5 +4,6 @@ import tech.fiap.hackaton.internal.dto.VideoStatusDTO;
 
 public interface RetrieveVideoStatus {
 
-    VideoStatusDTO getStatusByVideoId(Long videoId);
+	VideoStatusDTO getStatusByVideoId(Long videoId);
+
 }

@@ -9,21 +9,17 @@ import tech.fiap.hackaton.internal.repository.VideoRepository;
 @Service
 public class RetrieveVideoStatusImpl implements RetrieveVideoStatus {
 
-    private final VideoRepository videoRepository;
+	private final VideoRepository videoRepository;
 
-    public RetrieveVideoStatusImpl(VideoRepository videoRepository) {
-        this.videoRepository = videoRepository;
-    }
+	public RetrieveVideoStatusImpl(VideoRepository videoRepository) {
+		this.videoRepository = videoRepository;
+	}
 
-    @Override
-    public VideoStatusDTO getStatusByVideoId(Long videoId) {
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new RuntimeException("Video não encontrado"));
+	@Override
+	public VideoStatusDTO getStatusByVideoId(Long videoId) {
+		Video video = videoRepository.findById(videoId).orElseThrow(() -> new RuntimeException("Video não encontrado"));
 
-        return new VideoStatusDTO(
-                video.getId(),
-                video.getUrl(),
-                video.getStatus()
-        );
-    }
+		return new VideoStatusDTO(video.getId(), video.getUrl(), video.getStatus());
+	}
+
 }

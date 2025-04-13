@@ -6,5 +6,7 @@ import tech.fiap.hackaton.internal.entity.Person;
 import java.util.Optional;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {
-    Optional<Person> findByEmail(String email);
+
+	Optional<Person> findByEmail(String email);
+
 }

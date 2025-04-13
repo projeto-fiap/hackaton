@@ -7,5 +7,7 @@ import tech.fiap.hackaton.internal.dto.VideoDTO;
 import java.util.List;
 
 public interface CreateVideo {
-    List<VideoDTO> uploadVideos(List<MultipartFile> files, Long personId);
+
+	List<VideoDTO> uploadVideos(List<MultipartFile> files, Long personId);
+
 }
