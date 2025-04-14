@@ -8,7 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoStatusKafka {
-    private String videoId;
-    private String storage;
-    private String status;
+
+	private String videoId;
+
+	private String storage;
+
+	private String status;
+
 }

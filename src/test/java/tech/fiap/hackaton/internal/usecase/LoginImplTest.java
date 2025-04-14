@@ -25,101 +25,105 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class LoginImplTest {
 
-    @Mock
-    private PersonRepository personRepository;
+	@Mock
+	private PersonRepository personRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+	@Mock
+	private PasswordEncoder passwordEncoder;
 
-    @InjectMocks
-    private LoginImpl loginService;
+	@InjectMocks
+	private LoginImpl loginService;
 
-    private Person validPerson;
-    private final String validEmail = "usuario@teste.com";
-    private final String validPassword = "senha123";
-    private final String encodedPassword = "$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4HkJ6QY2J1J4rR3VtVJ7iJ8lY1OW";
+	private Person validPerson;
 
-    @BeforeEach
-    void setUp() {
-        validPerson = new Person();
-        validPerson.setEmail(validEmail);
-        validPerson.setSenha(encodedPassword);
-    }
+	private final String validEmail = "usuario@teste.com";
 
-    @Test
-    void login_ShouldReturnTokenWhenCredentialsAreValid() {
-        // Arrange
-        when(personRepository.findByEmail(validEmail)).thenReturn(Optional.of(validPerson));
-        when(passwordEncoder.matches(validPassword, encodedPassword)).thenReturn(true);
+	private final String validPassword = "senha123";
 
-        // Act
-        String token = loginService.login(validEmail, validPassword);
+	private final String encodedPassword = "$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4HkJ6QY2J1J4rR3VtVJ7iJ8lY1OW";
 
-        // Assert
-        assertNotNull(token);
-        assertFalse(token.isEmpty());
+	@BeforeEach
+	void setUp() {
+		validPerson = new Person();
+		validPerson.setEmail(validEmail);
+		validPerson.setSenha(encodedPassword);
+	}
 
-        // Verificar se o token é válido
-        JwtParser parser = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor("suaChaveSecretaMuitoSeguraEComplexa1234567890".getBytes()))
-                .build();
+	@Test
+	void login_ShouldReturnTokenWhenCredentialsAreValid() {
+		// Arrange
+		when(personRepository.findByEmail(validEmail)).thenReturn(Optional.of(validPerson));
+		when(passwordEncoder.matches(validPassword, encodedPassword)).thenReturn(true);
 
-        Jws<Claims> claims = parser.parseClaimsJws(token);
-        assertEquals(validEmail, claims.getBody().getSubject());
-        assertEquals("USER", claims.getBody().get("roles"));
+		// Act
+		String token = loginService.login(validEmail, validPassword);
 
-        verify(personRepository, times(1)).findByEmail(validEmail);
-        verify(passwordEncoder, times(1)).matches(validPassword, encodedPassword);
-    }
+		// Assert
+		assertNotNull(token);
+		assertFalse(token.isEmpty());
 
-    @Test
-    void login_ShouldThrowExceptionWhenUserNotFound() {
-        // Arrange
-        when(personRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+		// Verificar se o token é válido
+		JwtParser parser = Jwts.parserBuilder()
+				.setSigningKey(Keys.hmacShaKeyFor("suaChaveSecretaMuitoSeguraEComplexa1234567890".getBytes())).build();
 
-        // Act & Assert
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> loginService.login("email@inexistente.com", "qualquersenha"));
+		Jws<Claims> claims = parser.parseClaimsJws(token);
+		assertEquals(validEmail, claims.getBody().getSubject());
+		assertEquals("USER", claims.getBody().get("roles"));
 
-        assertEquals("Credenciais inválidas", exception.getMessage());
-        verify(personRepository, times(1)).findByEmail("email@inexistente.com");
-        verify(passwordEncoder, never()).matches(anyString(), anyString());
-    }
+		verify(personRepository, times(1)).findByEmail(validEmail);
+		verify(passwordEncoder, times(1)).matches(validPassword, encodedPassword);
+	}
 
-    @Test
-    void login_ShouldThrowExceptionWhenPasswordIsInvalid() {
-        // Arrange
-        when(personRepository.findByEmail(validEmail)).thenReturn(Optional.of(validPerson));
-        when(passwordEncoder.matches("senhaerrada", encodedPassword)).thenReturn(false);
+	@Test
+	void login_ShouldThrowExceptionWhenUserNotFound() {
+		// Arrange
+		when(personRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        // Act & Assert
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> loginService.login(validEmail, "senhaerrada"));
+		// Act & Assert
+		RuntimeException exception = assertThrows(RuntimeException.class,
+				() -> loginService.login("email@inexistente.com", "qualquersenha"));
 
-        assertEquals("Credenciais inválidas", exception.getMessage());
-        verify(personRepository, times(1)).findByEmail(validEmail);
-        verify(passwordEncoder, times(1)).matches("senhaerrada", encodedPassword);
-    }
+		assertEquals("Credenciais inválidas", exception.getMessage());
+		verify(personRepository, times(1)).findByEmail("email@inexistente.com");
+		verify(passwordEncoder, never()).matches(anyString(), anyString());
+	}
 
-    @Test
-    void login_ShouldGenerateTokenWithCorrectExpiration() {
-        // Arrange
-        when(personRepository.findByEmail(validEmail)).thenReturn(Optional.of(validPerson));
-        when(passwordEncoder.matches(validPassword, encodedPassword)).thenReturn(true);
+	@Test
+	void login_ShouldThrowExceptionWhenPasswordIsInvalid() {
+		// Arrange
+		when(personRepository.findByEmail(validEmail)).thenReturn(Optional.of(validPerson));
+		when(passwordEncoder.matches("senhaerrada", encodedPassword)).thenReturn(false);
 
-        // Act
-        String token = loginService.login(validEmail, validPassword);
+		// Act & Assert
+		RuntimeException exception = assertThrows(RuntimeException.class,
+				() -> loginService.login(validEmail, "senhaerrada"));
 
-        // Assert
-        JwtParser parser = Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor("suaChaveSecretaMuitoSeguraEComplexa1234567890".getBytes()))
-                .build();
+		assertEquals("Credenciais inválidas", exception.getMessage());
+		verify(personRepository, times(1)).findByEmail(validEmail);
+		verify(passwordEncoder, times(1)).matches("senhaerrada", encodedPassword);
+	}
 
-        Claims claims = parser.parseClaimsJws(token).getBody();
-        Date expiration = claims.getExpiration();
-        Date issuedAt = claims.getIssuedAt();
+	@Test
+	void login_ShouldGenerateTokenWithCorrectExpiration() {
+		// Arrange
+		when(personRepository.findByEmail(validEmail)).thenReturn(Optional.of(validPerson));
+		when(passwordEncoder.matches(validPassword, encodedPassword)).thenReturn(true);
 
-        // Verifica se a expiração é 20 minutos após a emissão (1200000 ms = 20 minutos)
-        assertEquals(1200000, expiration.getTime() - issuedAt.getTime(), 1000); // Margem de 1 segundo
-    }
+		// Act
+		String token = loginService.login(validEmail, validPassword);
+
+		// Assert
+		JwtParser parser = Jwts.parserBuilder()
+				.setSigningKey(Keys.hmacShaKeyFor("suaChaveSecretaMuitoSeguraEComplexa1234567890".getBytes())).build();
+
+		Claims claims = parser.parseClaimsJws(token).getBody();
+		Date expiration = claims.getExpiration();
+		Date issuedAt = claims.getIssuedAt();
+
+		// Verifica se a expiração é 20 minutos após a emissão (1200000 ms = 20 minutos)
+		assertEquals(1200000, expiration.getTime() - issuedAt.getTime(), 1000); // Margem
+																				// de 1
+																				// segundo
+	}
+
 }

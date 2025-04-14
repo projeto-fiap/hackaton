@@ -14,28 +14,32 @@ import java.util.Optional;
 @Service
 public class UpdateVideoImpl implements UpdateVideo {
 
-    @Autowired
-    private VideoRepository videoRepository;
+	@Autowired
+	private VideoRepository videoRepository;
 
-    @Override
-    public void updateVideo(VideoStatusKafka videoStatusKafka) {
-        Optional<Video> optionalVideo = videoRepository.findByHashNome(videoStatusKafka.getVideoId());
-        if (optionalVideo.isPresent()) {
-            Video video = optionalVideo.get();
-            try {
-                // Valida e converte o status recebido para o enum VideoStatus
-                VideoStatus status = VideoStatus.valueOf(videoStatusKafka.getStatus().toUpperCase());
-                video.setStatus(status);
-            } catch (IllegalArgumentException e) {
-                System.err.println("Status inválido recebido: " + videoStatusKafka.getStatus());
-                return;
-            }
-            video.setUrl(videoStatusKafka.getStorage());
-            video.setDataAtualizacao(LocalDateTime.now()); // Atualiza manualmente a data de atualização
-            videoRepository.save(video);
-            System.out.println("Vídeo atualizado com sucesso: " + video.getHashNome());
-        } else {
-            System.err.println("Vídeo não encontrado: " + videoStatusKafka.getVideoId());
-        }
-    }
+	@Override
+	public void updateVideo(VideoStatusKafka videoStatusKafka) {
+		Optional<Video> optionalVideo = videoRepository.findByHashNome(videoStatusKafka.getVideoId());
+		if (optionalVideo.isPresent()) {
+			Video video = optionalVideo.get();
+			try {
+				// Valida e converte o status recebido para o enum VideoStatus
+				VideoStatus status = VideoStatus.valueOf(videoStatusKafka.getStatus().toUpperCase());
+				video.setStatus(status);
+			}
+			catch (IllegalArgumentException e) {
+				System.err.println("Status inválido recebido: " + videoStatusKafka.getStatus());
+				return;
+			}
+			video.setUrl(videoStatusKafka.getStorage());
+			video.setDataAtualizacao(LocalDateTime.now()); // Atualiza manualmente a data
+															// de atualização
+			videoRepository.save(video);
+			System.out.println("Vídeo atualizado com sucesso: " + video.getHashNome());
+		}
+		else {
+			System.err.println("Vídeo não encontrado: " + videoStatusKafka.getVideoId());
+		}
+	}
+
 }

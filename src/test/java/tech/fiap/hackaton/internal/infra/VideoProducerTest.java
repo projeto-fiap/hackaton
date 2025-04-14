@@ -21,96 +21,87 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class VideoProducerTest {
 
-    @Mock
-    private KafkaTemplate<String, VideoProducerDTO> kafkaTemplate;
+	@Mock
+	private KafkaTemplate<String, VideoProducerDTO> kafkaTemplate;
 
-    @InjectMocks
-    private VideoProducer videoProducer;
+	@InjectMocks
+	private VideoProducer videoProducer;
 
-    @Test
-    void sendVideo_ShouldSendVideoToKafkaWithCorrectTopicAndKey() throws IOException {
-        // Arrange
-        String hashNome = "video-123";
-        String originalFileName = "video.mp4";
-        String contentType = "video/mp4";
-        byte[] fileContent = "test content".getBytes();
+	@Test
+	void sendVideo_ShouldSendVideoToKafkaWithCorrectTopicAndKey() throws IOException {
+		// Arrange
+		String hashNome = "video-123";
+		String originalFileName = "video.mp4";
+		String contentType = "video/mp4";
+		byte[] fileContent = "test content".getBytes();
 
-        MultipartFile file = new MockMultipartFile("video", originalFileName, contentType, fileContent);
-        Video video = new Video();
-        video.setHashNome(hashNome);
+		MultipartFile file = new MockMultipartFile("video", originalFileName, contentType, fileContent);
+		Video video = new Video();
+		video.setHashNome(hashNome);
 
-        // Act
-        videoProducer.sendVideo(file, video);
+		// Act
+		videoProducer.sendVideo(file, video);
 
-        // Assert
-        verify(kafkaTemplate).send(
-                eq("v1.video-upload-content"), // Verifica o tópico correto
-                eq(hashNome), // Verifica a chave (hashNome)
-                any(VideoProducerDTO.class)
-        );
-    }
+		// Assert
+		verify(kafkaTemplate).send(eq("v1.video-upload-content"), // Verifica o tópico
+																	// correto
+				eq(hashNome), // Verifica a chave (hashNome)
+				any(VideoProducerDTO.class));
+	}
 
-    @Test
-    void sendVideo_ShouldCreateDTOWithCorrectFields() throws IOException {
-        // Arrange
-        String hashNome = "video-123";
-        String originalFileName = "video.mp4";
-        String contentType = "video/mp4";
-        byte[] fileContent = "test content".getBytes();
+	@Test
+	void sendVideo_ShouldCreateDTOWithCorrectFields() throws IOException {
+		// Arrange
+		String hashNome = "video-123";
+		String originalFileName = "video.mp4";
+		String contentType = "video/mp4";
+		byte[] fileContent = "test content".getBytes();
 
-        MultipartFile file = new MockMultipartFile("video", originalFileName, contentType, fileContent);
-        Video video = new Video();
-        video.setHashNome(hashNome);
+		MultipartFile file = new MockMultipartFile("video", originalFileName, contentType, fileContent);
+		Video video = new Video();
+		video.setHashNome(hashNome);
 
-        // Act
-        videoProducer.sendVideo(file, video);
+		// Act
+		videoProducer.sendVideo(file, video);
 
-        // Assert
-        verify(kafkaTemplate).send(
-                anyString(),
-                anyString(),
-                argThat(dto -> {
-                    assertEquals(hashNome, dto.getFileName()); // Agora verificando hashNome
-                    assertEquals(contentType, dto.getContentType());
-                    assertNotNull(dto.getData());
-                    return true;
-                })
-        );
-    }
+		// Assert
+		verify(kafkaTemplate).send(anyString(), anyString(), argThat(dto -> {
+			assertEquals(hashNome, dto.getFileName()); // Agora verificando hashNome
+			assertEquals(contentType, dto.getContentType());
+			assertNotNull(dto.getData());
+			return true;
+		}));
+	}
 
-    @Test
-    void sendVideo_ShouldHandleIOException() throws IOException {
-        // Arrange
-        MultipartFile file = mock(MultipartFile.class);
-        when(file.getBytes()).thenThrow(new IOException("Simulated error"));
-        Video video = new Video();
-        video.setHashNome("video-123");
+	@Test
+	void sendVideo_ShouldHandleIOException() throws IOException {
+		// Arrange
+		MultipartFile file = mock(MultipartFile.class);
+		when(file.getBytes()).thenThrow(new IOException("Simulated error"));
+		Video video = new Video();
+		video.setHashNome("video-123");
 
-        // Act & Assert
-        assertThrows(IOException.class, () -> videoProducer.sendVideo(file, video));
-        verify(kafkaTemplate, never()).send(any(), any(), any());
-    }
+		// Act & Assert
+		assertThrows(IOException.class, () -> videoProducer.sendVideo(file, video));
+		verify(kafkaTemplate, never()).send(any(), any(), any());
+	}
 
-    @Test
-    void sendVideo_ShouldCompressDataBeforeSending() throws IOException {
-        // Arrange
-        String content = "This is a test content that should be compressed ".repeat(50);
-        MultipartFile file = new MockMultipartFile("video", "video.mp4", "video/mp4", content.getBytes());
-        Video video = new Video();
-        video.setHashNome("video-123");
+	@Test
+	void sendVideo_ShouldCompressDataBeforeSending() throws IOException {
+		// Arrange
+		String content = "This is a test content that should be compressed ".repeat(50);
+		MultipartFile file = new MockMultipartFile("video", "video.mp4", "video/mp4", content.getBytes());
+		Video video = new Video();
+		video.setHashNome("video-123");
 
-        // Act
-        videoProducer.sendVideo(file, video);
+		// Act
+		videoProducer.sendVideo(file, video);
 
-        // Assert
-        verify(kafkaTemplate).send(
-                anyString(),
-                anyString(),
-                argThat(dto -> {
-                    assertTrue(dto.getData().length < content.getBytes().length,
-                            "Dados devem ser menores após compressão");
-                    return true;
-                })
-        );
-    }
+		// Assert
+		verify(kafkaTemplate).send(anyString(), anyString(), argThat(dto -> {
+			assertTrue(dto.getData().length < content.getBytes().length, "Dados devem ser menores após compressão");
+			return true;
+		}));
+	}
+
 }

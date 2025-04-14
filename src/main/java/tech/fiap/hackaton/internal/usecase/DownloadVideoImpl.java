@@ -9,16 +9,15 @@ import java.util.Optional;
 @Service
 public class DownloadVideoImpl implements DownloadVideo {
 
-    private final VideoRepository videoRepository;
+	private final VideoRepository videoRepository;
 
-    public DownloadVideoImpl(VideoRepository videoRepository) {
-        this.videoRepository = videoRepository;
-    }
+	public DownloadVideoImpl(VideoRepository videoRepository) {
+		this.videoRepository = videoRepository;
+	}
 
-    @Override
-    public Optional<String> download(String hashNome) {
-        return videoRepository.findByHashNome(hashNome)
-                .map(video -> video.getUrl());
-    }
+	@Override
+	public Optional<String> download(String hashNome) {
+		return videoRepository.findByHashNome(hashNome).map(video -> video.getUrl());
+	}
+
 }
-

@@ -25,6 +25,7 @@ public class Video {
 	private VideoStatus status;
 
 	private LocalDateTime dataCriacao;
+
 	@UpdateTimestamp
 	private LocalDateTime dataAtualizacao;
 

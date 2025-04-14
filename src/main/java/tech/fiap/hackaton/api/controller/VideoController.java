@@ -1,6 +1,5 @@
 package tech.fiap.hackaton.api.controller;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +28,8 @@ public class VideoController {
 	private final DownloadVideo downloadVideo;
 
 	public VideoController(CreateVideo createVideo, RetrieveVideos retrieveVideos,
-			RetrieveVideoStatus retrieveVideoStatus, GetUserByVideoHash getUserByVideoHash, DownloadVideo downloadVideo) {
+			RetrieveVideoStatus retrieveVideoStatus, GetUserByVideoHash getUserByVideoHash,
+			DownloadVideo downloadVideo) {
 		this.createVideo = createVideo;
 		this.retrieveVideos = retrieveVideos;
 		this.retrieveVideoStatus = retrieveVideoStatus;
@@ -62,10 +62,7 @@ public class VideoController {
 	@GetMapping("/download/{hashNome}")
 	public ResponseEntity<?> downloadVideo(@PathVariable String hashNome) {
 		Optional<String> downloadUrl = downloadVideo.download(hashNome);
-		return downloadUrl
-				.map(url -> ResponseEntity.status(HttpStatus.OK)
-						.location(URI.create(url))
-						.build())
+		return downloadUrl.map(url -> ResponseEntity.status(HttpStatus.OK).location(URI.create(url)).build())
 				.orElse(ResponseEntity.notFound().build());
 	}
 
