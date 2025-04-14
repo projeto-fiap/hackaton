@@ -16,20 +16,21 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
 
-    @Bean
-    public ProducerFactory<String, VideoProducerDTO> producerFactory() {
-        Map<String, Object> configProps = new HashMap<>();
-        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VideoProducerSerializer.class);
-        configProps.put(ProducerConfig.BATCH_SIZE_CONFIG, 52428800);
-        configProps.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 52428800);
-        configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 52428800);  // 50MB
-        return new DefaultKafkaProducerFactory<>(configProps);
-    }
+	@Bean
+	public ProducerFactory<String, VideoProducerDTO> producerFactory() {
+		Map<String, Object> configProps = new HashMap<>();
+		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VideoProducerSerializer.class);
+		configProps.put(ProducerConfig.BATCH_SIZE_CONFIG, 52428800);
+		configProps.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 52428800);
+		configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 52428800); // 50MB
+		return new DefaultKafkaProducerFactory<>(configProps);
+	}
 
-    @Bean
-    public KafkaTemplate<String, VideoProducerDTO> kafkaTemplate() {
-        return new KafkaTemplate<>(producerFactory());
-    }
+	@Bean
+	public KafkaTemplate<String, VideoProducerDTO> kafkaTemplate() {
+		return new KafkaTemplate<>(producerFactory());
+	}
+
 }

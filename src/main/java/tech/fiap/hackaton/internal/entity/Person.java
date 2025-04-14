@@ -23,8 +23,8 @@ public class Person {
 	private String nome;
 
 	@NotBlank(message = "O CPF não pode estar em branco")
-	@Pattern(regexp = "\\d{11}", message = "O CPF deve conter 11 dígitos numéricos")
-	@Column(unique = true, nullable = false, length = 11)
+	@Pattern(regexp = "\\d{11}", message = "O CPF deve conter 14 dígitos numéricos")
+	@Column(unique = true, nullable = false, length = 14)
 	private String cpf;
 
 	@NotBlank(message = "A senha não pode estar em branco")

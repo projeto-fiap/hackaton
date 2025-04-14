@@ -18,101 +18,101 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class RetriveAllPersonImplTest {
 
-    @Mock
-    private PersonRepository personRepository;
+	@Mock
+	private PersonRepository personRepository;
 
-    @InjectMocks
-    private RetriveAllPersonImpl retriveAllPerson;
+	@InjectMocks
+	private RetriveAllPersonImpl retriveAllPerson;
 
-    @Test
-    void getAllPersons_ShouldReturnEmptyListWhenNoPersonsExist() {
-        // Arrange
-        when(personRepository.findAll()).thenReturn(List.of());
+	@Test
+	void getAllPersons_ShouldReturnEmptyListWhenNoPersonsExist() {
+		// Arrange
+		when(personRepository.findAll()).thenReturn(List.of());
 
-        // Act
-        List<PersonResponse> result = retriveAllPerson.getAllPersons();
+		// Act
+		List<PersonResponse> result = retriveAllPerson.getAllPersons();
 
-        // Assert
-        assertTrue(result.isEmpty());
-        verify(personRepository, times(1)).findAll();
-    }
+		// Assert
+		assertTrue(result.isEmpty());
+		verify(personRepository, times(1)).findAll();
+	}
 
-    @Test
-    void getAllPersons_ShouldReturnListOfPersonResponses() {
-        // Arrange
-        Person person1 = new Person();
-        person1.setId(1L);
-        person1.setNome("João Silva");
-        person1.setCpf("123.456.789-00");
-        person1.setEmail("joao@example.com");
+	@Test
+	void getAllPersons_ShouldReturnListOfPersonResponses() {
+		// Arrange
+		Person person1 = new Person();
+		person1.setId(1L);
+		person1.setNome("João Silva");
+		person1.setCpf("123.456.789-00");
+		person1.setEmail("joao@example.com");
 
-        Person person2 = new Person();
-        person2.setId(2L);
-        person2.setNome("Maria Souza");
-        person2.setCpf("987.654.321-00");
-        person2.setEmail("maria@example.com");
+		Person person2 = new Person();
+		person2.setId(2L);
+		person2.setNome("Maria Souza");
+		person2.setCpf("987.654.321-00");
+		person2.setEmail("maria@example.com");
 
-        when(personRepository.findAll()).thenReturn(Arrays.asList(person1, person2));
+		when(personRepository.findAll()).thenReturn(Arrays.asList(person1, person2));
 
-        // Act
-        List<PersonResponse> result = retriveAllPerson.getAllPersons();
+		// Act
+		List<PersonResponse> result = retriveAllPerson.getAllPersons();
 
-        // Assert
-        assertEquals(2, result.size());
+		// Assert
+		assertEquals(2, result.size());
 
-        PersonResponse response1 = result.get(0);
-        assertEquals(person1.getId(), response1.id());
-        assertEquals(person1.getNome(), response1.nome());
-        assertEquals(person1.getCpf(), response1.cpf());
-        assertEquals(person1.getEmail(), response1.email());
+		PersonResponse response1 = result.get(0);
+		assertEquals(person1.getId(), response1.id());
+		assertEquals(person1.getNome(), response1.nome());
+		assertEquals(person1.getCpf(), response1.cpf());
+		assertEquals(person1.getEmail(), response1.email());
 
-        PersonResponse response2 = result.get(1);
-        assertEquals(person2.getId(), response2.id());
-        assertEquals(person2.getNome(), response2.nome());
-        assertEquals(person2.getCpf(), response2.cpf());
-        assertEquals(person2.getEmail(), response2.email());
+		PersonResponse response2 = result.get(1);
+		assertEquals(person2.getId(), response2.id());
+		assertEquals(person2.getNome(), response2.nome());
+		assertEquals(person2.getCpf(), response2.cpf());
+		assertEquals(person2.getEmail(), response2.email());
 
-        verify(personRepository, times(1)).findAll();
-    }
+		verify(personRepository, times(1)).findAll();
+	}
 
-    @Test
-    void getAllPersons_ShouldMapAllFieldsCorrectly() {
-        // Arrange
-        Person person = new Person();
-        person.setId(3L);
-        person.setNome("Carlos Oliveira");
-        person.setCpf("456.789.123-00");
-        person.setEmail("carlos@example.com");
+	@Test
+	void getAllPersons_ShouldMapAllFieldsCorrectly() {
+		// Arrange
+		Person person = new Person();
+		person.setId(3L);
+		person.setNome("Carlos Oliveira");
+		person.setCpf("456.789.123-00");
+		person.setEmail("carlos@example.com");
 
-        when(personRepository.findAll()).thenReturn(List.of(person));
+		when(personRepository.findAll()).thenReturn(List.of(person));
 
-        // Act
-        List<PersonResponse> result = retriveAllPerson.getAllPersons();
+		// Act
+		List<PersonResponse> result = retriveAllPerson.getAllPersons();
 
-        // Assert
-        assertEquals(1, result.size());
-        PersonResponse response = result.get(0);
+		// Assert
+		assertEquals(1, result.size());
+		PersonResponse response = result.get(0);
 
-        assertAll(
-                () -> assertEquals(person.getId(), response.id()),
-                () -> assertEquals(person.getNome(), response.nome()),
-                () -> assertEquals(person.getCpf(), response.cpf()),
-                () -> assertEquals(person.getEmail(), response.email())
-        );
-    }
+		assertAll(() -> assertEquals(person.getId(), response.id()),
+				() -> assertEquals(person.getNome(), response.nome()),
+				() -> assertEquals(person.getCpf(), response.cpf()),
+				() -> assertEquals(person.getEmail(), response.email()));
+	}
 
-    @Test
-    void getAllPersons_ShouldReturnCorrectNumberOfItems() {
-        // Arrange
-        List<Person> persons = Arrays.asList(
-                new Person(), new Person(), new Person() // 3 pessoas genéricas
-        );
-        when(personRepository.findAll()).thenReturn(persons);
+	@Test
+	void getAllPersons_ShouldReturnCorrectNumberOfItems() {
+		// Arrange
+		List<Person> persons = Arrays.asList(new Person(), new Person(), new Person() // 3
+																						// pessoas
+																						// genéricas
+		);
+		when(personRepository.findAll()).thenReturn(persons);
 
-        // Act
-        List<PersonResponse> result = retriveAllPerson.getAllPersons();
+		// Act
+		List<PersonResponse> result = retriveAllPerson.getAllPersons();
 
-        // Assert
-        assertEquals(3, result.size());
-    }
+		// Assert
+		assertEquals(3, result.size());
+	}
+
 }

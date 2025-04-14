@@ -4,5 +4,7 @@ import tech.fiap.hackaton.internal.dto.VideoDTO;
 import tech.fiap.hackaton.internal.dto.VideoStatusKafka;
 
 public interface UpdateVideo {
-    void updateVideo(VideoStatusKafka videoStatusKafka);
+
+	void updateVideo(VideoStatusKafka videoStatusKafka);
+
 }

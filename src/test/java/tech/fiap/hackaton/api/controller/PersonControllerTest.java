@@ -21,131 +21,133 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PersonControllerTest {
 
-    @Mock
-    private CreatePerson createPersonUseCase;
+	@Mock
+	private CreatePerson createPersonUseCase;
 
-    @Mock
-    private Login loginUseCase;
+	@Mock
+	private Login loginUseCase;
 
-    @Mock
-    private RetriveAllPerson retriveAllPersonUseCase;
+	@Mock
+	private RetriveAllPerson retriveAllPersonUseCase;
 
-    @Mock
-    private DeletePerson deletePersonUseCase;
+	@Mock
+	private DeletePerson deletePersonUseCase;
 
-    @Mock
-    private UpdatePerson updatePersonUseCase;
+	@Mock
+	private UpdatePerson updatePersonUseCase;
 
-    @Mock
-    private RetriveByIdPerson retriveByIdPersonUseCase;
+	@Mock
+	private RetriveByIdPerson retriveByIdPersonUseCase;
 
-    @InjectMocks
-    private PersonController personController;
+	@InjectMocks
+	private PersonController personController;
 
-    private PersonDTO personDTO;
-    private PersonResponse personResponse;
+	private PersonDTO personDTO;
 
-    @BeforeEach
-    void setUp() {
-        personDTO = new PersonDTO();
-        personDTO.setNome("João Silva");
-        personDTO.setCpf("123.456.789-00");
-        personDTO.setEmail("joao@example.com");
-        personDTO.setSenha("senha123");
+	private PersonResponse personResponse;
 
-        personResponse = new PersonResponse(1L, "João Silva", "123.456.789-00", "joao@example.com");
-    }
+	@BeforeEach
+	void setUp() {
+		personDTO = new PersonDTO();
+		personDTO.setNome("João Silva");
+		personDTO.setCpf("123.456.789-00");
+		personDTO.setEmail("joao@example.com");
+		personDTO.setSenha("senha123");
 
-    @Test
-    void registerPerson_ShouldReturnCreatedResponse() {
-        when(createPersonUseCase.createPerson(any(PersonDTO.class))).thenReturn(personResponse);
+		personResponse = new PersonResponse(1L, "João Silva", "123.456.789-00", "joao@example.com");
+	}
 
-        ResponseEntity<PersonResponse> response = personController.registerPerson(personDTO);
+	@Test
+	void registerPerson_ShouldReturnCreatedResponse() {
+		when(createPersonUseCase.createPerson(any(PersonDTO.class))).thenReturn(personResponse);
 
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(personResponse, response.getBody());
-        verify(createPersonUseCase, times(1)).createPerson(personDTO);
-    }
+		ResponseEntity<PersonResponse> response = personController.registerPerson(personDTO);
 
-    @Test
-    void login_WithValidBasicAuth_ShouldReturnToken() {
-        String authHeader = "Basic am9hb0BleGFtcGxlLmNvbTpzZW5oYTEyMw=="; // joao@example.com:senha123
-        when(loginUseCase.login("joao@example.com", "senha123")).thenReturn("token123");
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		assertEquals(personResponse, response.getBody());
+		verify(createPersonUseCase, times(1)).createPerson(personDTO);
+	}
 
-        String result = personController.login(authHeader);
+	@Test
+	void login_WithValidBasicAuth_ShouldReturnToken() {
+		String authHeader = "Basic am9hb0BleGFtcGxlLmNvbTpzZW5oYTEyMw=="; // joao@example.com:senha123
+		when(loginUseCase.login("joao@example.com", "senha123")).thenReturn("token123");
 
-        assertEquals("token123", result);
-        verify(loginUseCase, times(1)).login("joao@example.com", "senha123");
-    }
+		String result = personController.login(authHeader);
 
-    @Test
-    void login_WithInvalidBasicAuthFormat_ShouldThrowException() {
-        String authHeader = "InvalidHeader";
+		assertEquals("token123", result);
+		verify(loginUseCase, times(1)).login("joao@example.com", "senha123");
+	}
 
-        assertThrows(RuntimeException.class, () -> personController.login(authHeader));
-        verify(loginUseCase, never()).login(anyString(), anyString());
-    }
+	@Test
+	void login_WithInvalidBasicAuthFormat_ShouldThrowException() {
+		String authHeader = "InvalidHeader";
 
-    @Test
-    void login_WithMalformedBasicAuth_ShouldThrowException() {
-        String authHeader = "Basic invalidBase64";
+		assertThrows(RuntimeException.class, () -> personController.login(authHeader));
+		verify(loginUseCase, never()).login(anyString(), anyString());
+	}
 
-        assertThrows(RuntimeException.class, () -> personController.login(authHeader));
-        verify(loginUseCase, never()).login(anyString(), anyString());
-    }
+	@Test
+	void login_WithMalformedBasicAuth_ShouldThrowException() {
+		String authHeader = "Basic invalidBase64";
 
-    @Test
-    void getAllPersons_ShouldReturnListOfPersons() {
-        List<PersonResponse> expectedList = Arrays.asList(
-                new PersonResponse(1L, "João Silva", "123.456.789-00", "joao@example.com"),
-                new PersonResponse(2L, "Maria Souza", "987.654.321-00", "maria@example.com")
-        );
-        when(retriveAllPersonUseCase.getAllPersons()).thenReturn(expectedList);
+		assertThrows(RuntimeException.class, () -> personController.login(authHeader));
+		verify(loginUseCase, never()).login(anyString(), anyString());
+	}
 
-        List<PersonResponse> result = personController.getAllPersons();
+	@Test
+	void getAllPersons_ShouldReturnListOfPersons() {
+		List<PersonResponse> expectedList = Arrays.asList(
+				new PersonResponse(1L, "João Silva", "123.456.789-00", "joao@example.com"),
+				new PersonResponse(2L, "Maria Souza", "987.654.321-00", "maria@example.com"));
+		when(retriveAllPersonUseCase.getAllPersons()).thenReturn(expectedList);
 
-        assertEquals(2, result.size());
-        assertEquals(expectedList, result);
-        verify(retriveAllPersonUseCase, times(1)).getAllPersons();
-    }
+		List<PersonResponse> result = personController.getAllPersons();
 
-    @Test
-    void getPersonById_ShouldReturnPerson() {
-        Long id = 1L;
-        when(retriveByIdPersonUseCase.getPersonById(id)).thenReturn(personResponse);
+		assertEquals(2, result.size());
+		assertEquals(expectedList, result);
+		verify(retriveAllPersonUseCase, times(1)).getAllPersons();
+	}
 
-        PersonResponse result = personController.getPersonById(id);
+	@Test
+	void getPersonById_ShouldReturnPerson() {
+		Long id = 1L;
+		when(retriveByIdPersonUseCase.getPersonById(id)).thenReturn(personResponse);
 
-        assertEquals(personResponse, result);
-        verify(retriveByIdPersonUseCase, times(1)).getPersonById(id);
-    }
+		PersonResponse result = personController.getPersonById(id);
 
-    @Test
-    void updatePerson_ShouldReturnUpdatedPerson() {
-        Long id = 1L;
-        PersonDTO updatedDTO = new PersonDTO();
-        updatedDTO.setNome("João Silva Atualizado");
-        updatedDTO.setCpf("123.456.789-00");
-        updatedDTO.setEmail("joao.novo@example.com");
-        updatedDTO.setSenha("novaSenha123");
+		assertEquals(personResponse, result);
+		verify(retriveByIdPersonUseCase, times(1)).getPersonById(id);
+	}
 
-        PersonResponse updatedResponse = new PersonResponse(1L, "João Silva Atualizado", "123.456.789-00", "joao.novo@example.com");
+	@Test
+	void updatePerson_ShouldReturnUpdatedPerson() {
+		Long id = 1L;
+		PersonDTO updatedDTO = new PersonDTO();
+		updatedDTO.setNome("João Silva Atualizado");
+		updatedDTO.setCpf("123.456.789-00");
+		updatedDTO.setEmail("joao.novo@example.com");
+		updatedDTO.setSenha("novaSenha123");
 
-        when(updatePersonUseCase.updatePerson(id, updatedDTO)).thenReturn(updatedResponse);
+		PersonResponse updatedResponse = new PersonResponse(1L, "João Silva Atualizado", "123.456.789-00",
+				"joao.novo@example.com");
 
-        PersonResponse result = personController.updatePerson(id, updatedDTO);
+		when(updatePersonUseCase.updatePerson(id, updatedDTO)).thenReturn(updatedResponse);
 
-        assertEquals(updatedResponse, result);
-        verify(updatePersonUseCase, times(1)).updatePerson(id, updatedDTO);
-    }
+		PersonResponse result = personController.updatePerson(id, updatedDTO);
 
-    @Test
-    void deletePerson_ShouldCallDeleteUseCase() {
-        Long id = 1L;
-        doNothing().when(deletePersonUseCase).deletePerson(id);
+		assertEquals(updatedResponse, result);
+		verify(updatePersonUseCase, times(1)).updatePerson(id, updatedDTO);
+	}
 
-        personController.deletePerson(id);
+	@Test
+	void deletePerson_ShouldCallDeleteUseCase() {
+		Long id = 1L;
+		doNothing().when(deletePersonUseCase).deletePerson(id);
 
-        verify(deletePersonUseCase, times(1)).deletePerson(id);
-    }
+		personController.deletePerson(id);
+
+		verify(deletePersonUseCase, times(1)).deletePerson(id);
+	}
+
 }
