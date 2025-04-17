@@ -1,9 +1,12 @@
+server:
+  port: 8084
+
 spring:
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: localhost:29092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: tech.fiap.hackaton.internal.infra.VideoProducerSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
       batch-size: 52428800
       buffer-memory: 52428800
       acks: all
