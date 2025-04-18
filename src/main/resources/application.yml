@@ -1,3 +1,6 @@
+hackaton:
+  keycloak-url: http://localhost:29000
+  keycloak-realm: master
 spring:
   kafka:
     bootstrap-servers: localhost:9092
@@ -50,3 +53,9 @@ spring:
       org.springframework.security: DEBUG
       org.springframework.web: DEBUG
       tech.fiap.hackaton: DEBUG
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:29000/realms/master
