@@ -17,11 +17,11 @@ import java.util.Map;
 public class KafkaConfig {
 
 	@Bean
-	public ProducerFactory<String, VideoProducerDTO> producerFactory() {
+	public ProducerFactory<String, String> producerFactory() {
 		Map<String, Object> configProps = new HashMap<>();
 		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, VideoProducerSerializer.class);
+		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		configProps.put(ProducerConfig.BATCH_SIZE_CONFIG, 52428800);
 		configProps.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 52428800);
 		configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 52428800); // 50MB
@@ -29,7 +29,7 @@ public class KafkaConfig {
 	}
 
 	@Bean
-	public KafkaTemplate<String, VideoProducerDTO> kafkaTemplate() {
+	public KafkaTemplate<String, String> kafkaTemplate() {
 		return new KafkaTemplate<>(producerFactory());
 	}
 

@@ -17,6 +17,6 @@ public class VideoProducerDTO implements Serializable {
 
 	private String contentType;
 
-	private byte[] data;
+	private String data;
 
 }
