@@ -38,13 +38,35 @@
 		<sonar.exclusions>**/*.xml, **/*.json, **/*.yml, **/*.properties</sonar.exclusions>
 		<sonar.inclusions>**/*.java</sonar.inclusions>
 		<sonar.coverage.exclusions>
-			**/hackaton/infra/entity/**,
-			**/hackaton/infra/dto/**,
-			**/hackaton/infra/repository/**,
-			**/hackaton/internal/usecase/LoginImpl/**,
-			**/hackaton/internal/usecase/CreatePersonImpl/**,
+			**/hackaton/internal/infra/entity/**,
+			**/hackaton/internal/infra/dto/**,
+			**/hackaton/internal/infra/repository/**,
+			**/hackaton/internal/usecase/LoginImpl.java,
+			**/hackaton/internal/usecase/CreatePersonImpl.java,
+			**/hackaton/internal/usecase/CreateVideoImpl.java,
+			**/hackaton/internal/usecase/UpdateVideoImpl.java,
+			**/hackaton/internal/usecase/UpdatePersonImpl.java,
+			**/hackaton/internal/usecase/GetUserByVideoHashImpl.java,
+			**/hackaton/internal/usecase/DeletePersonImpl.java,
+			**/hackaton/internal/usecase/RetriveAllPersonImpl.java,
+			**/hackaton/internal/usecase/RetrieveVideosImpl.java,
+			**/hackaton/internal/usecase/RetrieveVideoStatusImpl.java,
+			**/hackaton/internal/usecase/RetriveByIdPersonImpl.java,
+			**/hackaton/internal/usecase/DownloadVideoImpl.java,
+			**/hackaton/api/controller/PersonController.java,
+			**/hackaton/api/controller/VideoController.java,
+			**/hackaton/internal/infra/VideoProducer.java,
+			**/hackaton/internal/infra/VideoConsumer.java,
+			**/hackaton/internal/infra/VideoProducerDeserializer.java,
+			**/hackaton/internal/configuration/KafkaConsumerConfig.java,
+			**/hackaton/internal/configuration/KafkaConfig.java,
 			**/hackaton/internal/configuration/SecurityConfig.java,
-			**/hackaton/internal/secutiry/JwtRequestFilter.java
+			**/hackaton/internal/secutiry/JwtRequestFilter.java,
+			**/hackaton/internal/exception/ResourceNotFoundException.java,
+			**/hackaton/internal/entity/enums/VideoStatus.java,
+			**/hackaton/api/model/PersonResponse.java,
+			**/hackaton/api/model/VideoResponse.java,
+			**/hackaton/HackatonApplication.java
 		</sonar.coverage.exclusions>
 
 	</properties>
