@@ -21,6 +21,7 @@ import tech.fiap.hackaton.internal.repository.PersonRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Slf4j
 @Service
 public class CreatePersonImpl implements CreatePerson {
@@ -34,6 +35,7 @@ public class CreatePersonImpl implements CreatePerson {
 
 	@Value("${hackaton.keycloak-url}")
 	private String baseUrl;
+
 	public CreatePersonImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
 		this.personRepository = personRepository;
 		this.passwordEncoder = passwordEncoder;
@@ -56,7 +58,7 @@ public class CreatePersonImpl implements CreatePerson {
 	}
 
 	public void createUserInKeycloak(PersonDTO personDTO) {
-		String url = String.format("%s/admin/realms/%s/users",baseUrl, realm);
+		String url = String.format("%s/admin/realms/%s/users", baseUrl, realm);
 		String token = getAdminAccessToken();
 
 		HttpHeaders headers = new HttpHeaders();
@@ -77,21 +79,18 @@ public class CreatePersonImpl implements CreatePerson {
 
 		HttpEntity<Map<String, Object>> request = new HttpEntity<>(user, headers);
 
-		ResponseEntity<String> response = new RestTemplate().postForEntity(
-				url,
-				request,
-				String.class
-		);
+		ResponseEntity<String> response = new RestTemplate().postForEntity(url, request, String.class);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
 			log.info("Usuário criado no Keycloak com sucesso.");
-		} else {
+		}
+		else {
 			throw new RuntimeException("Falha ao criar usuário no Keycloak: " + response.getStatusCode());
 		}
 	}
 
 	public String getAdminAccessToken() {
-		String url = String.format("%s/realms/%s/protocol/openid-connect/token",baseUrl, realm);
+		String url = String.format("%s/realms/%s/protocol/openid-connect/token", baseUrl, realm);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -104,12 +103,9 @@ public class CreatePersonImpl implements CreatePerson {
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-		ResponseEntity<Map> response = new RestTemplate().postForEntity(
-				url,
-				request,
-				Map.class
-		);
+		ResponseEntity<Map> response = new RestTemplate().postForEntity(url, request, Map.class);
 
 		return (String) response.getBody().get("access_token");
 	}
+
 }

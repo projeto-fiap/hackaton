@@ -62,7 +62,7 @@ public class VideoController {
 	@GetMapping("/download/{hashNome}")
 	public ResponseEntity<?> downloadVideo(@PathVariable String hashNome) {
 		Optional<String> downloadUrl = downloadVideo.download(hashNome);
-		return downloadUrl.map(url -> ResponseEntity.status(HttpStatus.OK).location(URI.create(url)).build())
+		return downloadUrl.map(url -> ResponseEntity.status(HttpStatus.FOUND).location(URI.create(url)).build())
 				.orElse(ResponseEntity.notFound().build());
 	}
 

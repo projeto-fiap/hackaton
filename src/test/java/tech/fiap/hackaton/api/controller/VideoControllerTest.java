@@ -122,7 +122,7 @@ class VideoControllerTest {
 		ResponseEntity<?> response = videoController.downloadVideo(hashNome);
 
 		// Assert
-		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(HttpStatus.FOUND, response.getStatusCode());
 		assertEquals(URI.create(url), response.getHeaders().getLocation());
 		verify(downloadVideo, times(1)).download(hashNome);
 	}

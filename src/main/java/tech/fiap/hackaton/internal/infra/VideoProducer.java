@@ -43,4 +43,5 @@ public class VideoProducer {
 		}
 		return byteArrayOutputStream.toByteArray();
 	}
+
 }

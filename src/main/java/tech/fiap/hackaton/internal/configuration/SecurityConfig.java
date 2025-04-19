@@ -24,19 +24,12 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http
-				.csrf(csrf -> csrf.disable())
+		http.csrf(csrf -> csrf.disable())
 				.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/person/register", "/person/login").permitAll()
-						.requestMatchers("/video/**", "/person/**").authenticated()
-						.anyRequest().authenticated()
-				)
-				.oauth2ResourceServer(oauth2 -> oauth2
-						.jwt(jwt -> jwt
-								.jwtAuthenticationConverter(jwtAuthenticationConverter())
-						)
-				)
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/person/register", "/person/login","/video/download/**").permitAll()
+						.requestMatchers("/video/**", "/person/**").authenticated().anyRequest().authenticated())
+				.oauth2ResourceServer(
+						oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
 		return http.build();
@@ -67,4 +60,5 @@ public class SecurityConfig {
 		converter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
 		return converter;
 	}
+
 }

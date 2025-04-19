@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.fiap.hackaton.api.usecase.UpdateVideo;
 import tech.fiap.hackaton.internal.dto.VideoStatusKafka;
+import tech.fiap.hackaton.internal.entity.enums.VideoStatus;
 
 import static org.mockito.Mockito.*;
 
@@ -27,10 +28,10 @@ class VideoConsumerTest {
 	@Test
 	void consumeVideoStatus_ShouldProcessValidMessageSuccessfully() throws JsonProcessingException {
 		// Arrange
-		String message = "{\"videoId\":\"video-123\",\"status\":\"PROCESSADO\",\"storage\":\"http://storage.com/video.mp4\"}";
+		String message = "{\"videoId\":\"video-123\",\"status\":\"PROCESSANDO\",\"storage\":\"http://storage.com/video.mp4\"}";
 		VideoStatusKafka statusKafka = new VideoStatusKafka();
 		statusKafka.setVideoId("video-123");
-		statusKafka.setStatus("PROCESSADO");
+		statusKafka.setStatus(VideoStatus.valueOf("PROCESSANDO"));
 		statusKafka.setStorage("http://storage.com/video.mp4");
 
 		when(objectMapper.readValue(message, VideoStatusKafka.class)).thenReturn(statusKafka);
@@ -62,10 +63,10 @@ class VideoConsumerTest {
 	@Test
 	void consumeVideoStatus_ShouldHandleRuntimeException() throws JsonProcessingException {
 		// Arrange
-		String message = "{\"videoId\":\"video-123\",\"status\":\"PROCESSADO\",\"storage\":\"http://storage.com/video.mp4\"}";
+		String message = "{\"videoId\":\"video-123\",\"status\":\"PROCESSANDO\",\"storage\":\"http://storage.com/video.mp4\"}";
 		VideoStatusKafka statusKafka = new VideoStatusKafka();
 		statusKafka.setVideoId("video-123");
-		statusKafka.setStatus("PROCESSADO");
+		statusKafka.setStatus(VideoStatus.valueOf("PROCESSANDO"));
 		statusKafka.setStorage("http://storage.com/video.mp4");
 
 		when(objectMapper.readValue(message, VideoStatusKafka.class)).thenReturn(statusKafka);

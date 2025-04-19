@@ -23,15 +23,14 @@ public class UpdateVideoImpl implements UpdateVideo {
 		if (optionalVideo.isPresent()) {
 			Video video = optionalVideo.get();
 			try {
-				// Valida e converte o status recebido para o enum VideoStatus
-				VideoStatus status = VideoStatus.valueOf(videoStatusKafka.getStatus().toUpperCase());
+				VideoStatus status = videoStatusKafka.getStatus();
 				video.setStatus(status);
 			}
 			catch (IllegalArgumentException e) {
 				System.err.println("Status inválido recebido: " + videoStatusKafka.getStatus());
 				return;
 			}
-			video.setUrl(videoStatusKafka.getStorage());
+			video.setUrl(videoStatusKafka.getDownloadUrl());
 			video.setDataAtualizacao(LocalDateTime.now()); // Atualiza manualmente a data
 															// de atualização
 			videoRepository.save(video);
