@@ -29,5 +29,5 @@ spec:
             - name: KEYCLOAK_BASE_URL
               value: http://keycloak-service.default-namespace.svc.cluster.local
             - name: POSTGRES_URL
-              value: jdbc:postgresql://projetofiap.cv8qzjssaviw.us-east-1.rds.amazonaws.com?currentSchema=public
+              value: jdbc:postgresql://projetofiap.cv8qzjssaviw.us-east-1.rds.amazonaws.com/projetofiap?currentSchema=public
 

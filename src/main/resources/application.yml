@@ -29,7 +29,7 @@ spring:
     name: project
 
   datasource:
-    url: ${POSTGRES_URL:jdbc:postgresql://projetofiap.cv8qzjssaviw.us-east-1.rds.amazonaws.com/postgres?currentSchema=public}
+    url: ${POSTGRES_URL:jdbc:postgresql://projetofiap.cv8qzjssaviw.us-east-1.rds.amazonaws.com/projetofiap?currentSchema=public}
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
