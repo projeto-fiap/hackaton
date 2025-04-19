@@ -19,7 +19,7 @@ public class KafkaConfig {
 	@Bean
 	public ProducerFactory<String, String> producerFactory() {
 		Map<String, Object> configProps = new HashMap<>();
-		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka-service.default-namespace.svc.cluster.local:9092");
 		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		configProps.put(ProducerConfig.BATCH_SIZE_CONFIG, 52428800);
