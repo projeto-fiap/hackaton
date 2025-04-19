@@ -1,5 +1,5 @@
 hackaton:
-  keycloak-url: http://localhost:29000
+  keycloak-url: http://keycloak-service.default-namespace.svc.cluster.local
   keycloak-realm: master
 server:
   port: 8084  
@@ -29,7 +29,7 @@ spring:
     name: project
 
   datasource:
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=public}
+    url: ${POSTGRES_URL:jdbc:postgresql://projetofiap.cv8qzjssaviw.us-east-1.rds.amazonaws.com/postgres?currentSchema=public}
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
