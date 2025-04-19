@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: hackaton
-          image: matheuspatricio0/target/hackaton-0.0.1:latest
+          image: matheuspatricio0/hackaton-0.0.1:latest
           resources:
             requests:
               memory: "256Mi"
