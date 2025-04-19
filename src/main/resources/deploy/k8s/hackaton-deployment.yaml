@@ -27,4 +27,7 @@ spec:
             - containerPort: 8081
           env:
             - name: KEYCLOAK_BASE_URL
-              value: http://keycloak-service.default-namespace.svc.cluster.local/
+              value: http://keycloak-service.default-namespace.svc.cluster.local
+            - name: POSTGRES_URL
+              value: jdbc:postgresql://projetofiap.cv8qzjssaviw.us-east-1.rds.amazonaws.com?currentSchema=public
+
