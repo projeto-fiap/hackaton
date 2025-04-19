@@ -9,11 +9,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class VideoProducerDTO implements Serializable {
-
-	private static final long serialVersionUID = 1L;
-
-	private String fileName;
+public class VideoProducerDTO {
+	private String filename;
 
 	private String contentType;
 

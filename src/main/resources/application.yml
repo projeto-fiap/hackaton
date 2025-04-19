@@ -1,6 +1,8 @@
 hackaton:
   keycloak-url: http://localhost:29000
   keycloak-realm: master
+server:
+  port: 8084  
 spring:
   kafka:
     bootstrap-servers: localhost:29092
