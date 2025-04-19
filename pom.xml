@@ -39,6 +39,8 @@
 		<sonar.inclusions>**/*.java</sonar.inclusions>
 		<sonar.coverage.exclusions>
 			**/hackaton/infra/entity/**,
+			**/hackaton/infra/dto/**,
+			**/hackaton/infra/repository/**,
 			**/hackaton/internal/usecase/LoginImpl/**,
 			**/hackaton/internal/usecase/CreatePersonImpl/**,
 			**/hackaton/internal/configuration/SecurityConfig.java,
