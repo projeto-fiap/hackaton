@@ -10,6 +10,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VideoProducerDTO {
+
 	private String filename;
 
 	private String contentType;

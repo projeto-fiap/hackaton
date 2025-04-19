@@ -38,14 +38,14 @@ public class LoginImpl implements Login {
 
 		if (optionalPerson.isPresent()) {
 			Person person = optionalPerson.get();
-			return getUserToken(person.getEmail(),senha);
+			return getUserToken(person.getEmail(), senha);
 		}
 
 		throw new RuntimeException("Credenciais inválidas");
 	}
 
 	public String getUserToken(String username, String password) {
-		String url = String.format("%s/realms/%s/protocol/openid-connect/token",baseUrl, realm);
+		String url = String.format("%s/realms/%s/protocol/openid-connect/token", baseUrl, realm);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -59,12 +59,9 @@ public class LoginImpl implements Login {
 
 		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
-		ResponseEntity<Map> response = new RestTemplate().postForEntity(
-				url,
-				request,
-				Map.class
-		);
+		ResponseEntity<Map> response = new RestTemplate().postForEntity(url, request, Map.class);
 
 		return (String) response.getBody().get("access_token");
 	}
+
 }

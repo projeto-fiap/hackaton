@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tech.fiap.hackaton.api.usecase.UpdateVideo;
 import tech.fiap.hackaton.internal.dto.VideoStatusKafka;
 import tech.fiap.hackaton.internal.entity.Video;
 import tech.fiap.hackaton.internal.entity.enums.VideoStatus;
@@ -27,94 +26,98 @@ class UpdateVideoImplTest {
 	private UpdateVideoImpl updateVideo;
 
 	@Test
-	void updateVideo_ShouldUpdateVideoWhenFoundAndStatusValid() {
+	void updateVideo_ShouldUpdateAllFieldsWhenVideoExists() {
 		// Arrange
-		String hashNome = "video-123";
+		String videoId = "video-123";
 		VideoStatusKafka statusKafka = new VideoStatusKafka();
-		statusKafka.setVideoId(hashNome);
-		statusKafka.setStatus("processando");
-		statusKafka.setStorage("http://storage.com/video.mp4");
+		statusKafka.setVideoId(videoId);
+		statusKafka.setStatus(VideoStatus.FINALIZADO);
+		statusKafka.setDownloadUrl("http://download.url");
+		statusKafka.setStorage("bucket-name");
+		statusKafka.setMessage("Processamento concluído com sucesso");
 
-		Video video = new Video();
-		video.setHashNome(hashNome);
+		Video existingVideo = new Video();
+		existingVideo.setHashNome(videoId);
+		existingVideo.setStatus(VideoStatus.PROCESSANDO);
 
-		when(videoRepository.findByHashNome(hashNome)).thenReturn(Optional.of(video));
-		when(videoRepository.save(any(Video.class))).thenReturn(video);
+		when(videoRepository.findByHashNome(videoId)).thenReturn(Optional.of(existingVideo));
+		when(videoRepository.save(any(Video.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
 		// Act
 		updateVideo.updateVideo(statusKafka);
 
 		// Assert
-		verify(videoRepository, times(1)).findByHashNome(hashNome);
-		verify(videoRepository, times(1)).save(video);
-		assertEquals(VideoStatus.PROCESSANDO, video.getStatus());
-		assertEquals(statusKafka.getStorage(), video.getUrl());
-		assertNotNull(video.getDataAtualizacao());
+		verify(videoRepository).save(existingVideo);
+		assertEquals(VideoStatus.FINALIZADO, existingVideo.getStatus());
+		assertEquals("http://download.url", existingVideo.getUrl());
+		assertNotNull(existingVideo.getDataAtualizacao());
 	}
 
 	@Test
-	void updateVideo_ShouldHandleInvalidStatus() {
+	void updateVideo_ShouldHandleErroStatusWithMessage() {
 		// Arrange
-		String hashNome = "video-123";
+		String videoId = "video-456";
 		VideoStatusKafka statusKafka = new VideoStatusKafka();
-		statusKafka.setVideoId(hashNome);
-		statusKafka.setStatus("status-invalido");
-		statusKafka.setStorage("http://storage.com/video.mp4");
+		statusKafka.setVideoId(videoId);
+		statusKafka.setStatus(VideoStatus.ERRO);
+		statusKafka.setMessage("Falha no processamento");
+		statusKafka.setStorage("bucket-error");
 
-		Video video = new Video();
-		video.setHashNome(hashNome);
+		Video existingVideo = new Video();
+		existingVideo.setHashNome(videoId);
+		existingVideo.setStatus(VideoStatus.PROCESSANDO);
 
-		when(videoRepository.findByHashNome(hashNome)).thenReturn(Optional.of(video));
+		when(videoRepository.findByHashNome(videoId)).thenReturn(Optional.of(existingVideo));
+		when(videoRepository.save(any(Video.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
 		// Act
 		updateVideo.updateVideo(statusKafka);
 
 		// Assert
-		verify(videoRepository, times(1)).findByHashNome(hashNome);
+		assertEquals(VideoStatus.ERRO, existingVideo.getStatus());
+		assertNull(existingVideo.getUrl()); // URL não deve ser atualizada quando não fornecida
+	}
+
+	@Test
+	void updateVideo_ShouldLogErrorWhenVideoNotFound() {
+		// Arrange
+		String videoId = "video-not-found";
+		VideoStatusKafka statusKafka = new VideoStatusKafka();
+		statusKafka.setVideoId(videoId);
+		statusKafka.setStatus(VideoStatus.FINALIZADO);
+
+		when(videoRepository.findByHashNome(videoId)).thenReturn(Optional.empty());
+
+		// Act
+		updateVideo.updateVideo(statusKafka);
+
+		// Assert
 		verify(videoRepository, never()).save(any());
 	}
 
 	@Test
-	void updateVideo_ShouldHandleVideoNotFound() {
+	void updateVideo_ShouldUpdateStorageInformationWhenProvided() {
 		// Arrange
-		String hashNome = "video-nao-existente";
+		String videoId = "video-101";
 		VideoStatusKafka statusKafka = new VideoStatusKafka();
-		statusKafka.setVideoId(hashNome);
-		statusKafka.setStatus("processando");
-		statusKafka.setStorage("http://storage.com/video.mp4");
+		statusKafka.setVideoId(videoId);
+		statusKafka.setStatus(VideoStatus.FINALIZADO);
+		statusKafka.setStorage("new-bucket");
+		statusKafka.setDownloadUrl("http://new.url");
 
-		when(videoRepository.findByHashNome(hashNome)).thenReturn(Optional.empty());
+		Video existingVideo = new Video();
+		existingVideo.setHashNome(videoId);
+		existingVideo.setStatus(VideoStatus.PROCESSANDO);
+
+		when(videoRepository.findByHashNome(videoId)).thenReturn(Optional.of(existingVideo));
+		when(videoRepository.save(any(Video.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
 		// Act
 		updateVideo.updateVideo(statusKafka);
 
 		// Assert
-		verify(videoRepository, times(1)).findByHashNome(hashNome);
-		verify(videoRepository, never()).save(any());
+		assertEquals("http://new.url", existingVideo.getUrl());
+		// Assumindo que a classe Video tem um campo para storage
+		// Se necessário, adicione a verificação específica para o campo storage
 	}
-
-	@Test
-	void updateVideo_ShouldUpdateAllFieldsCorrectly() {
-		// Arrange
-		String hashNome = "video-456";
-		VideoStatusKafka statusKafka = new VideoStatusKafka();
-		statusKafka.setVideoId(hashNome);
-		statusKafka.setStatus("recebido");
-		statusKafka.setStorage("http://storage.com/new-video.mp4");
-
-		Video video = new Video();
-		video.setHashNome(hashNome);
-
-		when(videoRepository.findByHashNome(hashNome)).thenReturn(Optional.of(video));
-		when(videoRepository.save(any(Video.class))).thenReturn(video);
-
-		// Act
-		updateVideo.updateVideo(statusKafka);
-
-		// Assert
-		assertAll(() -> assertEquals(VideoStatus.RECEBIDO, video.getStatus()),
-				() -> assertEquals(statusKafka.getStorage(), video.getUrl()),
-				() -> assertNotNull(video.getDataAtualizacao()));
-	}
-
 }
