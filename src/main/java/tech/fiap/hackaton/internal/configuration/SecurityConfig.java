@@ -24,6 +24,7 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		// CSRF protection is disabled because the application is stateless and uses JWT tokens
 		http.csrf(csrf -> csrf.disable())
 				.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/person/register", "/person/login","/video/download/**").permitAll()
