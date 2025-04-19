@@ -41,8 +41,6 @@
 			**/hackaton/infra/entity/**,
 			**/hackaton/internal/usecase/LoginImpl/**,
 			**/hackaton/internal/usecase/CreatePersonImpl/**,
-			**/hackaton/internal/usecase/CreateVideoImpl/**,
-			**/hackaton/api/controller/PersonController.java,
 			**/hackaton/internal/configuration/SecurityConfig.java,
 			**/hackaton/internal/secutiry/JwtRequestFilter.java
 		</sonar.coverage.exclusions>
