@@ -66,4 +66,28 @@
                 referencedColumnNames="id"/>
     </changeSet>
 
+    <changeSet id="4" author="fiap">
+        <!-- Inserção de um usuário de teste -->
+        <insert tableName="person">
+            <column name="id" valueNumeric="1"/>
+            <column name="nome" value="Usuário Teste"/>
+            <column name="cpf" value="12345678901"/>
+            <column name="senha" value="senha123"/>
+            <column name="email" value="usuario.teste@example.com"/>
+        </insert>
+
+        <!-- Inserção de um vídeo de teste associado ao usuário -->
+        <insert tableName="video">
+            <column name="id" valueNumeric="1"/>
+            <column name="nome" value="Vídeo de Teste"/>
+            <column name="url" value="https://github.com/github/training-kit/archive/refs/heads/main.zip"/>
+            <column name="status" value="FINALIZADO"/>
+            <column name="data_criacao" valueDate="2025-04-18T21:00:00"/>
+            <column name="data_atualizacao" valueDate="2025-04-18T21:00:00"/>
+            <column name="person_id" valueNumeric="1"/>
+            <column name="hash_nome" value="hash_teste_123"/>
+        </insert>
+    </changeSet>
+
+
 </databaseChangeLog>
