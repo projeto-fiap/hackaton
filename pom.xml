@@ -38,7 +38,7 @@
 		<sonar.exclusions>**/*.xml, **/*.json, **/*.yml, **/*.properties</sonar.exclusions>
 		<sonar.inclusions>**/*.java</sonar.inclusions>
 		<sonar.coverage.exclusions>
-			**/project/infra/entity/**,**/infra/configuration/**
+			**/hackaton/infra/entity/**,**/hackaton/internal/usecase/LoginImpl/**,**/hackaton/internal/usecase/CreatePersonImpl/**
 		</sonar.coverage.exclusions>
 	</properties>
 	<dependencies>
@@ -301,6 +301,13 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/hackaton/internal/entity/**</exclude>
+						<exclude>**/hackaton/internal/usecase/CreatePersonImpl/**</exclude>
+						<exclude>**/hackaton/internal/usecase/LoginImpl/**</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
