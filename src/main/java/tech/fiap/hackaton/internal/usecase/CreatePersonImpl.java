@@ -30,6 +30,7 @@ public class CreatePersonImpl implements CreatePerson {
 
 	private final PasswordEncoder passwordEncoder;
 
+
 	@Value("${hackaton.keycloak-realm}")
 	private String realm;
 
@@ -105,7 +106,13 @@ public class CreatePersonImpl implements CreatePerson {
 
 		ResponseEntity<Map> response = new RestTemplate().postForEntity(url, request, Map.class);
 
-		return (String) response.getBody().get("access_token");
+		Map<String, Object> responseBody = response.getBody();
+		if (responseBody == null || !responseBody.containsKey("access_token")) {
+			throw new RuntimeException("Token de acesso não recebido do Keycloak.");
+		}
+
+		return (String) responseBody.get("access_token");
 	}
+
 
 }

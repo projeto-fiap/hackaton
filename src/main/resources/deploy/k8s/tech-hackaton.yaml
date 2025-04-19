@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hackaton-deployment
+  namespace: default-namespace
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hackaton
+  template:
+    metadata:
+      labels:
+        app: hackaton
+    spec:
+      containers:
+        - name: hackaton
+          image: matheuspatricio0/target/hackaton-0.0.1:latest
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8081
+          env:
+            - name: KEYCLOAK_BASE_URL
+              value: http://a740e813c410c4d05a99835a58e149d0-1270066710.us-east-1.elb.amazonaws.com

@@ -28,7 +28,33 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
-		<cucumber.version>7.15.0</cucumber.version>
+		<sonar.organization>projeto-fiap-1</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.projectKey>projeto-fiap-hackaton</sonar.projectKey>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.language>java</sonar.language>
+		<sonar.exclusions>**/*.xml, **/*.json, **/*.yml, **/*.properties</sonar.exclusions>
+		<sonar.inclusions>**/*.java</sonar.inclusions>
+		<sonar.coverage.exclusions>
+			**/hackaton/internal/infra/entity/**,
+			**/hackaton/internal/infra/dto/**,
+			**/hackaton/internal/infra/repository/**,
+			**/hackaton/internal/usecase/LoginImpl.java,
+			**/hackaton/internal/usecase/CreatePersonImpl.java,
+			**/hackaton/internal/infra/VideoProducerDeserializer.java,
+			**/hackaton/internal/configuration/KafkaConsumerConfig.java,
+			**/hackaton/internal/configuration/KafkaConfig.java,
+			**/hackaton/internal/configuration/SecurityConfig.java,
+			**/hackaton/internal/secutiry/JwtRequestFilter.java,
+			**/hackaton/internal/exception/ResourceNotFoundException.java,
+			**/hackaton/internal/entity/enums/VideoStatus.java,
+			**/hackaton/api/model/PersonResponse.java,
+			**/hackaton/api/model/VideoResponse.java,
+			**/hackaton/HackatonApplication.java
+		</sonar.coverage.exclusions>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -102,22 +128,6 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-java</artifactId>
-			<version>${cucumber.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-spring</artifactId>
-			<version>${cucumber.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.cucumber</groupId>
-			<artifactId>cucumber-junit</artifactId>
-			<version>${cucumber.version}</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
@@ -306,6 +316,13 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<exclude>**/hackaton/internal/entity/**</exclude>
+						<exclude>**/hackaton/internal/usecase/CreatePersonImpl/**</exclude>
+						<exclude>**/hackaton/internal/usecase/LoginImpl/**</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
