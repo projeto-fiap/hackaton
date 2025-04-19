@@ -27,4 +27,4 @@ spec:
             - containerPort: 8081
           env:
             - name: KEYCLOAK_BASE_URL
-              value: http://a740e813c410c4d05a99835a58e149d0-1270066710.us-east-1.elb.amazonaws.com
+              value: http://keycloak-service.default-namespace.svc.cluster.local/
