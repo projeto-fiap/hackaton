@@ -1,15 +1,19 @@
 package tech.fiap.hackaton.internal.usecase;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import tech.fiap.hackaton.api.usecase.Login;
 import tech.fiap.hackaton.internal.entity.Person;
 import tech.fiap.hackaton.internal.repository.PersonRepository;
 
-import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -17,13 +21,14 @@ public class LoginImpl implements Login {
 
 	private final PersonRepository personRepository;
 
-	private final PasswordEncoder passwordEncoder;
+	@Value("${hackaton.keycloak-realm}")
+	private String realm;
 
-	private final String SECRET_KEY = "suaChaveSecretaMuitoSeguraEComplexa1234567890";
+	@Value("${hackaton.keycloak-url}")
+	private String baseUrl;
 
-	public LoginImpl(PersonRepository personRepository, PasswordEncoder passwordEncoder) {
+	public LoginImpl(PersonRepository personRepository) {
 		this.personRepository = personRepository;
-		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -33,18 +38,33 @@ public class LoginImpl implements Login {
 
 		if (optionalPerson.isPresent()) {
 			Person person = optionalPerson.get();
-
-			if (passwordEncoder.matches(senha, person.getSenha())) {
-
-				String token = Jwts.builder().setSubject(person.getEmail()).claim("roles", "USER")
-						.setIssuedAt(new Date()).setExpiration(new Date(System.currentTimeMillis() + 1200000))
-						.signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256).compact();
-
-				return token;
-			}
+			return getUserToken(person.getEmail(),senha);
 		}
 
 		throw new RuntimeException("Credenciais inválidas");
 	}
 
+	public String getUserToken(String username, String password) {
+		String url = String.format("%s/realms/%s/protocol/openid-connect/token",baseUrl, realm);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+		body.add("client_id", "hackaton");
+		body.add("client_secret", "5QcYg218R3AN9dBWsWhDeSf8lgYRolcB");
+		body.add("grant_type", "password");
+		body.add("username", username);
+		body.add("password", password);
+
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+
+		ResponseEntity<Map> response = new RestTemplate().postForEntity(
+				url,
+				request,
+				Map.class
+		);
+
+		return (String) response.getBody().get("access_token");
+	}
 }
