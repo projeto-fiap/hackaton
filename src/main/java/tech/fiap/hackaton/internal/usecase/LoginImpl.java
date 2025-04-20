@@ -44,7 +44,7 @@ public class LoginImpl implements Login {
 			return getUserToken(person.getEmail(), senha);
 		}
 
-		throw new RuntimeException("Credenciais inválidas");
+		throw new RuntimeException(String.format("Email %s não encontrado, senha %s",email,senha));
 	}
 
 	public String getUserToken(String username, String password) {
