@@ -27,6 +27,9 @@ public class LoginImpl implements Login {
 	@Value("${hackaton.keycloak-url}")
 	private String baseUrl;
 
+	@Value("${hackaton.keycloak-clientSecret}")
+	private String clientSecret;
+
 	public LoginImpl(PersonRepository personRepository) {
 		this.personRepository = personRepository;
 	}
@@ -52,7 +55,7 @@ public class LoginImpl implements Login {
 
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
 		body.add("client_id", "hackaton");
-		body.add("client_secret", "5QcYg218R3AN9dBWsWhDeSf8lgYRolcB");
+		body.add("client_secret", clientSecret);
 		body.add("grant_type", "password");
 		body.add("username", username);
 		body.add("password", password);

@@ -1,6 +1,7 @@
 hackaton:
   keycloak-url: http://keycloak-service.default-namespace.svc.cluster.local
   keycloak-realm: master
+  keycloak-client-secret: ${CLIENT-SECRET:YDrRVkOCrhUq1XK3tz0EWD51Duiu9lLD}
 server:
   port: 8084  
 spring:
