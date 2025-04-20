@@ -58,13 +58,13 @@ class RetrieveVideosImplTest {
 		// Verify first video
 		VideoDTO dto1 = result.get(0);
 		assertEquals(video1.getId(), dto1.getId());
-		assertEquals(video1.getNome(), dto1.getNome());
+		assertEquals(video1.getHashNome(), dto1.getNome());
 		assertEquals(video1.getStatus(), dto1.getStatus());
 
 		// Verify second video
 		VideoDTO dto2 = result.get(1);
 		assertEquals(video2.getId(), dto2.getId());
-		assertEquals(video2.getNome(), dto2.getNome());
+		assertEquals(video2.getHashNome(), dto2.getNome());
 		assertEquals(video2.getStatus(), dto2.getStatus());
 
 		verify(videoRepository, times(1)).findByPersonId(personId);
@@ -83,7 +83,7 @@ class RetrieveVideosImplTest {
 
 		// Assert
 		assertAll(() -> assertEquals(video.getId(), videoDTO.getId()),
-				() -> assertEquals(video.getNome(), videoDTO.getNome()),
+				() -> assertEquals(video.getHashNome(), videoDTO.getNome()),
 				() -> assertEquals(video.getUrl(), videoDTO.getUrl()),
 				() -> assertEquals(video.getStatus(), videoDTO.getStatus()),
 				() -> assertEquals(video.getDataCriacao(), videoDTO.getDataCriacao()),

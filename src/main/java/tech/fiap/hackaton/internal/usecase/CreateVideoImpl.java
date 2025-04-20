@@ -77,7 +77,7 @@ public class CreateVideoImpl implements CreateVideo {
 	}
 
 	private VideoDTO convertToDTO(Video video) {
-		return new VideoDTO(video.getId(), video.getNome(), video.getUrl(), video.getStatus(), video.getDataCriacao(),
+		return new VideoDTO(video.getId(), video.getHashNome(), video.getUrl(), video.getStatus(), video.getDataCriacao(),
 				video.getDataAtualizacao());
 	}
 

@@ -22,7 +22,7 @@ public class RetrieveVideosImpl implements RetrieveVideos {
 	public List<VideoDTO> getVideosByPerson(Long personId) {
 		List<Video> videos = videoRepository.findByPersonId(personId);
 
-		return videos.stream().map(video -> new VideoDTO(video.getId(), video.getNome(), video.getUrl(),
+		return videos.stream().map(video -> new VideoDTO(video.getId(), video.getHashNome(), video.getUrl(),
 				video.getStatus(), video.getDataCriacao(), video.getDataAtualizacao())).collect(Collectors.toList());
 	}
 
