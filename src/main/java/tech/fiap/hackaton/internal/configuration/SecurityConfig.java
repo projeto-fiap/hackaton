@@ -24,10 +24,12 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		// CSRF protection is disabled because the application is stateless and uses JWT tokens
+		// CSRF protection is disabled because the application is stateless and uses JWT
+		// tokens
 		http.csrf(csrf -> csrf.disable())
 				.sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/person/register", "/person/login","/video/download/**").permitAll()
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/person/register", "/person/login", "/video/download/**").permitAll()
 						.requestMatchers("/video/**", "/person/**").authenticated().anyRequest().authenticated())
 				.oauth2ResourceServer(
 						oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
@@ -44,7 +46,9 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("*"));
+		configuration.setAllowedOrigins(List.of(
+				"https://frontend-hackaton-6lakj1ieb-gabriel-fagundes-colles-projects.vercel.app",
+				"https://frontend-hackaton-lovat.vercel.app"));
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
