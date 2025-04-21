@@ -54,7 +54,7 @@ public class LoginImpl implements Login {
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
 		MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-		body.add("client_id", "hackaton");
+		body.add("client_id", "tech-challenge-payments");
 		body.add("client_secret", clientSecret);
 		body.add("grant_type", "password");
 		body.add("username", username);

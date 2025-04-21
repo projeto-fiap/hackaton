@@ -1,8 +1,8 @@
 hackaton:
   keycloak-url: http://keycloak-service.default-namespace.svc.cluster.local
   keycloak-realm: master
-  keycloak-client-id: tech-challenge-payments
-  keycloak-client-secret: "**********"
+  keycloak-clientSecret: "**********"
+
 
 server:
   port: 8084  
