@@ -46,6 +46,7 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
+		// Allow requests from the specified origins
 		configuration.setAllowedOrigins(List.of(
 				"https://frontend-hackaton-6lakj1ieb-gabriel-fagundes-colles-projects.vercel.app",
 				"https://frontend-hackaton-lovat.vercel.app"));
